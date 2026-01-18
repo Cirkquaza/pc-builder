@@ -96,6 +96,7 @@ export default function Builder() {
   const [budget, setBudget] = useState<number>(0)
   const [customBudget, setCustomBudget] = useState<string>('')
   const [buildMode, setBuildMode] = useState<'auto' | 'manual' | null>(null)
+  const [isReplacing, setIsReplacing] = useState(false)
 
   const budgetPresets = [
     { name: 'Početni nivo', amount: 1000, icon: '🌱', description: 'Osnovni PC za svakodnevne potrebe' },
@@ -540,6 +541,7 @@ export default function Builder() {
                           const stepIndex = steps.findIndex(s => s.key === key)
                           setStep(stepIndex)
                           setShowResult(false)
+                          setIsReplacing(true)
                         }}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
                       >
@@ -654,6 +656,100 @@ export default function Builder() {
           </div>
         </div>
       </motion.div>
+    )
+  }
+
+  // Component replacement screen
+  if (isReplacing && step >= 0 && step < steps.length) {
+    const currentStep = steps[step]
+    const options = currentStep.options
+    const selectedComponent = selected[currentStep.key as keyof SelectedComponents]
+
+    return (
+      <div className="max-w-4xl mx-auto">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="card mb-6 bg-gradient-to-r from-gray-800 via-gray-900 to-gray-800 border-2 border-purple-400/50"
+        >
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <p className="text-sm text-gray-400 mb-1">Zamjena komponente</p>
+              <p className="text-3xl font-bold text-gray-100">{currentStep.title}</p>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                setIsReplacing(false)
+                setShowResult(true)
+              }}
+              className="px-6 py-3 bg-gray-700 text-gray-100 rounded-lg font-semibold hover:bg-gray-600 transition"
+            >
+              ← Nazad
+            </motion.button>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {options?.map((option, index) => {
+            const isAffordable = selectedComponent ? (budget - (totalPrice - (selectedComponent.price || 0)) - option.price >= 0) : (budget - totalPrice - option.price >= 0)
+            return (
+              <motion.button
+                key={option.id}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                whileHover={isAffordable || budget >= 999999 ? { scale: 1.05, y: -5 } : {}}
+                whileTap={isAffordable || budget >= 999999 ? { scale: 0.95 } : {}}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => {
+                  if (isAffordable || budget >= 999999) {
+                    const newSelected = { ...selected, [currentStep.key]: option }
+                    setSelected(newSelected)
+                    setIsReplacing(false)
+                    setShowResult(true)
+                  }
+                }}
+                disabled={!isAffordable && budget < 999999}
+                className={`card text-left transform transition-all cursor-pointer border-2 relative overflow-hidden ${
+                  !isAffordable && budget < 999999
+                    ? 'opacity-50 border-red-400 cursor-not-allowed'
+                    : 'border-transparent hover:border-cyan-400 hover:shadow-2xl'
+                }`}
+              >
+                {!isAffordable && budget < 999999 && (
+                  <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-bold z-10">
+                    Izvan budžeta
+                  </div>
+                )}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 to-gray-600/5"
+                  whileHover={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                />
+                <div className="relative z-10">
+                  <div className="flex justify-between items-start mb-3">
+                    <span className="text-sm font-semibold text-cyan-400 bg-cyan-400/20 border border-cyan-400/30 px-3 py-1 rounded-full">
+                      {option.brand}
+                    </span>
+                    <motion.span 
+                      className={`text-2xl font-bold ${!isAffordable && budget < 999999 ? 'text-red-400' : 'text-cyan-400'}`}
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      {option.price.toLocaleString('hr-HR')} €
+                    </motion.span>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-100 mb-2">{option.name}</h3>
+                  <p className="text-sm text-gray-400 mb-3">{option.specs}</p>
+                  {option.reason && (
+                    <p className="text-sm text-cyan-300 italic">{option.reason}</p>
+                  )}
+                </div>
+              </motion.button>
+            )
+          })}
+        </div>
+      </div>
     )
   }
 
