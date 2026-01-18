@@ -311,16 +311,21 @@ function BuilderContent() {
     const currentComponent = selected[currentStep.key as keyof typeof selected]
     const currentPrice = currentComponent?.price || 0
     
+    // Calculate minimum needed for remaining steps
+    const remainingSteps = steps.length - step - 1
+    const minNeededForRest = remainingSteps > 0 ? remainingSteps * 50 : 0 // ~50€ minimum per component
+    
     // If already selected, check if new option would fit in budget after replacement
-    // If not selected yet, check against remaining budget
+    // If not selected yet, check against remaining budget with buffer for remaining steps
     let isAffordable = false
     if (currentComponent) {
       // Replacement mode: check if (total - old price + new price) <= budget
       const totalAfterReplacement = totalPrice - currentPrice + opt.price
       isAffordable = budget >= 999999 ? true : (totalAfterReplacement <= budget)
     } else {
-      // New selection mode: check if (total + new price) <= budget
-      isAffordable = budget >= 999999 ? true : (totalPrice + opt.price <= budget)
+      // New selection mode: check if (total + new price + minimum for rest) <= budget
+      const spaceLeft = budget - totalPrice - minNeededForRest
+      isAffordable = budget >= 999999 ? true : (opt.price <= spaceLeft)
     }
     
     return {
