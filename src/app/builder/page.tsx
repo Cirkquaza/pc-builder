@@ -766,16 +766,15 @@ function BuilderContent() {
               <h3 className="text-2xl font-bold mb-4 text-green-400">🛒 Gdje kupiti komponente u Hrvatskoj</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {[
-                  { name: 'Links.hr', url: 'https://links.hr' },
-                  { name: 'Nabava.net', url: 'https://nabava.net' },
-                  { name: 'ADM.hr', url: 'https://adm.hr' },
-                  { name: 'eKupi.hr', url: 'https://ekupi.hr' },
-                  { name: 'Jagnje.com', url: 'https://jagnje.com' },
-                  { name: 'Centarzona.com', url: 'https://centarzona.com' },
-                  { name: 'Nix.hr', url: 'https://nix.hr' },
-                  { name: 'PC kuća', url: 'https://pckuca.hr' },
-                  { name: 'F.hr', url: 'https://f.hr' },
-                  { name: 'Hub.hr', url: 'https://hub.hr' },
+                  { name: 'Links.hr', url: 'https://www.links.hr/hr/racunala-komponente' },
+                  { name: 'Nabava.net', url: 'https://www.nabava.net/' },
+                  { name: 'ADM.hr', url: 'https://www.adm.hr/' },
+                  { name: 'eKupi.hr', url: 'https://www.ekupi.hr/' },
+                  { name: 'Jagnje.com', url: 'https://jagnje.com/' },
+                  { name: 'Centarzona.com', url: 'https://centarzona.com/' },
+                  { name: 'Nix.hr', url: 'https://www.nix.hr/' },
+                  { name: 'PC kuća', url: 'https://www.pckuca.hr/' },
+                  { name: 'F.hr', url: 'https://www.f.hr/' },
                 ].map((shop) => (
                   <a
                     key={shop.name}
