@@ -622,12 +622,6 @@ function BuilderContent() {
                           setShowResult(false)
                           setIsReplacing(true)
                         }}
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          setStep(stepIndex)
-                        }}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
                       >
                         🔄 Zamijeni
@@ -636,7 +630,6 @@ function BuilderContent() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => {
-                          // Otvori gdje kupiti modal
                           alert(`Gdje kupiti ${component?.brand} ${component?.name}:\n\nTražite proizvod na:\n• Informatika\n• Santa Domenica\n• Links.hr\n• Nabava.net\n• ADM.hr\n• eKupi.hr\n• Jagnje.com\n• Centarzona.com\n• Nix.hr\n• PC kuća`)
                         }}
                         className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
