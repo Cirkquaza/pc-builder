@@ -307,13 +307,13 @@ function BuilderContent() {
     let minNeeded = 0
     const remainingSteps = steps.length - step - 1
     
-    if (remainingSteps > 0) {
-      // Use average price instead of minimum to be more flexible
-      // This allows better component selection while still preventing overspending
-      for (let i = step + 1; i < steps.length; i++) {
+    // On last steps, minimal or no buffer
+    if (remainingSteps > 1) {
+      // Only apply buffer for earlier steps
+      for (let i = step + 1; i < steps.length - 1; i++) {
         const stepOptions = steps[i].options
-        const average = stepOptions.reduce((sum, opt) => sum + opt.price, 0) / stepOptions.length
-        minNeeded += average * 0.5 // Use only 50% of average as buffer for flexibility
+        const cheapest = stepOptions.reduce((min, opt) => opt.price < min.price ? opt : min)
+        minNeeded += cheapest.price * 0.7 // 70% of cheapest component
       }
     }
     return Math.ceil(minNeeded)
