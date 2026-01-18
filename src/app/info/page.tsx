@@ -214,6 +214,28 @@ export default function Info() {
         </div>
       </section>
 
+      {/* Autori */}
+      <section className="bg-gray-800/50 rounded-2xl p-12 border border-purple-400/30">
+        <h2 className="text-3xl font-bold mb-8 text-purple-400 text-center">
+          👥 O Projektu
+        </h2>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-2 text-white">Luka Ćirković</h3>
+            <p className="text-cyan-300 mb-4">GitHub: Cirkquaza</p>
+            <p className="text-gray-300">Glavni developer i arhitektura projekta</p>
+          </div>
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-2 text-white">Stipe Barišić</h3>
+            <p className="text-cyan-300 mb-4">GitHub: stipzard</p>
+            <p className="text-gray-300">Saradnik i razvoj aplikacije</p>
+          </div>
+        </div>
+        <p className="text-center text-gray-400 mt-8 text-sm">
+          PC Builder je timski projekat kreiran 2026. godine
+        </p>
+      </section>
+
       {/* CTA */}
       <section className="text-center bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-12 text-white border border-cyan-400/30">
         <h2 className="text-3xl font-bold mb-4">
