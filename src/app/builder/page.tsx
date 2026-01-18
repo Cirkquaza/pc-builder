@@ -27,12 +27,14 @@ interface SelectedComponents {
 
 // Komponente sa detaljnim opisima
 const cpuOptions: Component[] = [
-  { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, specs: '6C/12T, 4.4GHz', link: 'https://www.links.hr/hr/racunala-komponente/procesori-cpu', reason: 'Idealan za početni gaming - najbolji odnos cijene i performansi' },
-  { id: '2', name: 'Ryzen 7 7800X3D', brand: 'AMD', price: 439, specs: '8C/16T, 5.0GHz + 3D V-Cache', link: 'https://www.links.hr/hr/racunala-komponente/procesori-cpu', reason: 'Najbolji gaming procesor na tržištu - nenadmašne performanse u igrama' },
-  { id: '3', name: 'Ryzen 9 7950X', brand: 'AMD', price: 613, specs: '16C/32T, 5.7GHz', link: 'https://www.links.hr/hr/racunala-komponente/procesori-cpu', reason: 'Top performanse za gaming I kreativni rad' },
-  { id: '4', name: 'Core i5-13400F', brand: 'Intel', price: 199, specs: '10C/16T, 4.6GHz', link: 'https://www.nabava.net/', reason: 'Odlična mid-range opcija sa jakim performansama' },
-  { id: '5', name: 'Core i7-14700K', brand: 'Intel', price: 426, specs: '20C/28T, 5.6GHz', link: 'https://www.nabava.net/', reason: 'High-end gaming i multitasking powerhouse' },
-  { id: '6', name: 'Core i9-14900K', brand: 'Intel', price: 666, specs: '24C/32T, 6.0GHz', link: 'https://www.adm.hr/', reason: 'Ekstremne performanse za profesionalce' },
+  { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, specs: '6C/12T, 4.4GHz', link: 'https://www.links.hr', reason: 'Idealan za početni gaming - najbolji odnos cijene i performansi' },
+  { id: '2', name: 'Ryzen 7 7800X3D', brand: 'AMD', price: 439, specs: '8C/16T, 5.0GHz + 3D V-Cache', link: 'https://www.nabava.net', reason: 'Najbolji gaming procesor na tržištu - nenadmašne performanse u igrama' },
+  { id: '3', name: 'Ryzen 9 7950X', brand: 'AMD', price: 613, specs: '16C/32T, 5.7GHz', link: 'https://www.adm.hr', reason: 'Top performanse za gaming i kreativni rad' },
+  { id: '4', name: 'Ryzen 9 9950X', brand: 'AMD', price: 799, specs: '16C/32T, 5.7GHz Zen 5', link: 'https://www.ekupi.hr', reason: 'Najnovija generacija - najbolje za multitasking' },
+  { id: '5', name: 'Core i5-13400F', brand: 'Intel', price: 199, specs: '10C/16T, 4.6GHz', link: 'https://www.links.hr', reason: 'Odlična mid-range opcija sa jakim performansama' },
+  { id: '6', name: 'Core i7-14700K', brand: 'Intel', price: 426, specs: '20C/28T, 5.6GHz', link: 'https://www.nabava.net', reason: 'High-end gaming i multitasking powerhouse' },
+  { id: '7', name: 'Core i9-14900K', brand: 'Intel', price: 666, specs: '24C/32T, 6.0GHz', link: 'https://www.adm.hr', reason: 'Ekstremne performanse za profesionalce' },
+  { id: '8', name: 'Core i9-14900KS', brand: 'Intel', price: 799, specs: '24C/32T, 6.2GHz Max Turbo', link: 'https://www.ekupi.hr', reason: 'Top tier - najbrži Intel procesor' },
 ]
 
 const motherboardOptions: Component[] = [
@@ -45,13 +47,15 @@ const motherboardOptions: Component[] = [
 ]
 
 const gpuOptions: Component[] = [
-  { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, specs: '8GB GDDR6', link: 'https://www.links.hr/hr/racunala-komponente/graficke-kartice', reason: 'Entry-level gaming na 1080p rezoluciji' },
-  { id: '2', name: 'RX 6600', brand: 'AMD', price: 219, specs: '8GB GDDR6', link: 'https://www.nabava.net/', reason: 'Najbolja budžet opcija - odlična cijena/performanse' },
-  { id: '3', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, specs: '8GB GDDR6X + DLSS 3', link: 'https://www.links.hr/hr/racunala-komponente/graficke-kartice', reason: 'Savršena za 1440p gaming sa najnovijim tehnologijama' },
-  { id: '4', name: 'RX 7800 XT', brand: 'AMD', price: 573, specs: '16GB GDDR6', link: 'https://www.nabava.net/', reason: 'Odličan 1440p gaming sa puno VRAM-a' },
-  { id: '5', name: 'RTX 4070', brand: 'NVIDIA', price: 666, specs: '12GB GDDR6X + Ray Tracing', link: 'https://www.links.hr/hr/racunala-komponente/graficke-kartice', reason: 'High-end 1440p i entry 4K gaming' },
-  { id: '6', name: 'RTX 4080', brand: 'NVIDIA', price: 1333, specs: '16GB GDDR6X', link: 'https://www.adm.hr/', reason: 'Vrhunske 4K performanse' },
-  { id: '7', name: 'RX 7900 XTX', brand: 'AMD', price: 1066, specs: '24GB GDDR6', link: 'https://www.links.hr/hr/racunala-komponente/graficke-kartice', reason: 'Top 4K gaming sa ogromnom količinom memorije' },
+  { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, specs: '8GB GDDR6', link: 'https://www.links.hr', reason: 'Entry-level gaming na 1080p rezoluciji' },
+  { id: '2', name: 'RX 6600', brand: 'AMD', price: 219, specs: '8GB GDDR6', link: 'https://www.nabava.net', reason: 'Najbolja budžet opcija - odlična cijena/performanse' },
+  { id: '3', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, specs: '8GB GDDR6X + DLSS 3', link: 'https://www.links.hr', reason: 'Savršena za 1440p gaming sa najnovijim tehnologijama' },
+  { id: '4', name: 'RX 7800 XT', brand: 'AMD', price: 573, specs: '16GB GDDR6', link: 'https://www.nabava.net', reason: 'Odličan 1440p gaming sa puno VRAM-a' },
+  { id: '5', name: 'RTX 4070', brand: 'NVIDIA', price: 666, specs: '12GB GDDR6X + Ray Tracing', link: 'https://www.links.hr', reason: 'High-end 1440p i entry 4K gaming' },
+  { id: '6', name: 'RTX 4080', brand: 'NVIDIA', price: 1333, specs: '16GB GDDR6X', link: 'https://www.adm.hr', reason: 'Vrhunske 4K performanse' },
+  { id: '7', name: 'RX 7900 XTX', brand: 'AMD', price: 1066, specs: '24GB GDDR6', link: 'https://www.links.hr', reason: 'Top 4K gaming sa ogromnom količinom memorije' },
+  { id: '8', name: 'RTX 4090', brand: 'NVIDIA', price: 1799, specs: '24GB GDDR6X - Flagship', link: 'https://www.ekupi.hr', reason: 'Najmoćniji igraći GPU - 4K ultra settings' },
+  { id: '9', name: 'RTX 5090', brand: 'NVIDIA', price: 2199, specs: '32GB GDDR7 - Latest Gen', link: 'https://www.adm.hr', reason: 'Vrhunska nova generacija - nenadmašne performanse' },
 ]
 
 const ramOptions: Component[] = [
@@ -616,15 +620,22 @@ export default function Builder() {
               <div className="border-t border-white/20 pt-6">
                 <h4 className="font-bold mb-3 text-lg">Gdje kupiti u Hrvatskoj:</h4>
                 <div className="space-y-2">
-                  {['Links.hr', 'Nabava.net', 'ADM.hr', 'eKupi.hr'].map((shop, idx) => (
+                  {[
+                    { name: 'Links.hr', url: 'https://www.links.hr', icon: '🔗' },
+                    { name: 'Nabava.net', url: 'https://www.nabava.net', icon: '🛒' },
+                    { name: 'ADM.hr', url: 'https://www.adm.hr', icon: '💻' },
+                    { name: 'eKupi.hr', url: 'https://www.ekupi.hr', icon: '🏪' },
+                    { name: 'Jagnje.com', url: 'https://www.jagnje.com', icon: '⚡' },
+                    { name: 'Centarzona.com', url: 'https://www.centarzona.com', icon: '🎮' }
+                  ].map((shop) => (
                     <a
-                      key={shop}
-                      href={`https://www.${shop.toLowerCase()}`}
+                      key={shop.name}
+                      href={shop.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block p-3 bg-gray-700/50 hover:bg-cyan-400/20 border border-cyan-400/30 hover:border-cyan-400 rounded-lg transition hover:scale-105"
                     >
-                      {['🔗', '🛒', '💻', '🏪'][idx]} {shop}
+                      {shop.icon} {shop.name}
                     </a>
                   ))}
                 </div>
