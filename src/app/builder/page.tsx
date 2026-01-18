@@ -28,19 +28,19 @@ interface SelectedComponents {
 
 // Komponente sa detaljnim opisima
 const cpuOptions: Component[] = [
-  { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, specs: '6C/12T, 4.4GHz', link: 'https://www.links.hr', reason: 'Idealan za početni gaming - najbolji odnos cijene i performansi' },
+  { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, specs: '6C/12T, 4.4GHz', link: 'https://www.nabava.net', reason: 'Idealan za početni gaming - najbolji odnos cijene i performansi' },
   { id: '2', name: 'Ryzen 7 7800X3D', brand: 'AMD', price: 439, specs: '8C/16T, 5.0GHz + 3D V-Cache', link: 'https://www.nabava.net', reason: 'Najbolji gaming procesor na tržištu - nenadmašne performanse u igrama' },
   { id: '3', name: 'Ryzen 9 7950X', brand: 'AMD', price: 613, specs: '16C/32T, 5.7GHz', link: 'https://www.adm.hr', reason: 'Top performanse za gaming i kreativni rad' },
   { id: '4', name: 'Ryzen 9 9950X', brand: 'AMD', price: 799, specs: '16C/32T, 5.7GHz Zen 5', link: 'https://www.ekupi.hr', reason: 'Najnovija generacija - najbolje za multitasking' },
-  { id: '5', name: 'Core i5-13400F', brand: 'Intel', price: 199, specs: '10C/16T, 4.6GHz', link: 'https://www.links.hr', reason: 'Odlična mid-range opcija sa jakim performansama' },
+  { id: '5', name: 'Core i5-13400F', brand: 'Intel', price: 199, specs: '10C/16T, 4.6GHz', link: 'https://www.nabava.net', reason: 'Odlična mid-range opcija sa jakim performansama' },
   { id: '6', name: 'Core i7-14700K', brand: 'Intel', price: 426, specs: '20C/28T, 5.6GHz', link: 'https://www.nabava.net', reason: 'High-end gaming i multitasking powerhouse' },
   { id: '7', name: 'Core i9-14900K', brand: 'Intel', price: 666, specs: '24C/32T, 6.0GHz', link: 'https://www.adm.hr', reason: 'Ekstremne performanse za profesionalce' },
   { id: '8', name: 'Core i9-14900KS', brand: 'Intel', price: 799, specs: '24C/32T, 6.2GHz Max Turbo', link: 'https://www.ekupi.hr', reason: 'Top tier - najbrži Intel procesor' },
 ]
 
 const motherboardOptions: Component[] = [
-  { id: '1', name: 'B450 AORUS M', brand: 'Gigabyte', price: 79, specs: 'AMD AM4, DDR4', link: 'https://www.links.hr/hr/racunala-komponente/maticne-ploce', reason: 'Budžet opcija sa osnovnim funkcijama' },
-  { id: '2', name: 'B550 GAMING PLUS', brand: 'MSI', price: 119, specs: 'AMD AM4, DDR4, PCIe 4.0', link: 'https://www.links.hr/hr/racunala-komponente/maticne-ploce', reason: 'Odličan balans funkcija za gaming' },
+  { id: '1', name: 'B450 AORUS M', brand: 'Gigabyte', price: 79, specs: 'AMD AM4, DDR4', link: 'https://www.nabava.net/hr/racunala-komponente/maticne-ploce', reason: 'Budžet opcija sa osnovnim funkcijama' },
+  { id: '2', name: 'B550 GAMING PLUS', brand: 'MSI', price: 119, specs: 'AMD AM4, DDR4, PCIe 4.0', link: 'https://www.nabava.net/hr/racunala-komponente/maticne-ploce', reason: 'Odličan balans funkcija za gaming' },
   { id: '3', name: 'B650 AORUS ELITE', brand: 'Gigabyte', price: 199, specs: 'AMD AM5, DDR5, PCIe 5.0', link: 'https://www.adm.hr/', reason: 'Moderna platforma sa podrškom za DDR5' },
   { id: '4', name: 'X670E AORUS MASTER', brand: 'Gigabyte', price: 399, specs: 'AMD AM5, DDR5, Premium', link: 'https://www.adm.hr/', reason: 'Top funkcije i maksimalna proširivost' },
   { id: '5', name: 'B760 GAMING X', brand: 'Gigabyte', price: 159, specs: 'Intel LGA1700, DDR5', link: 'https://www.nabava.net/', reason: 'Solidna mid-range opcija za Intel' },
@@ -48,48 +48,48 @@ const motherboardOptions: Component[] = [
 ]
 
 const gpuOptions: Component[] = [
-  { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, specs: '8GB GDDR6', link: 'https://www.links.hr', reason: 'Entry-level gaming na 1080p rezoluciji' },
+  { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, specs: '8GB GDDR6', link: 'https://www.nabava.net', reason: 'Entry-level gaming na 1080p rezoluciji' },
   { id: '2', name: 'RX 6600', brand: 'AMD', price: 219, specs: '8GB GDDR6', link: 'https://www.nabava.net', reason: 'Najbolja budžet opcija - odlična cijena/performanse' },
-  { id: '3', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, specs: '8GB GDDR6X + DLSS 3', link: 'https://www.links.hr', reason: 'Savršena za 1440p gaming sa najnovijim tehnologijama' },
+  { id: '3', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, specs: '8GB GDDR6X + DLSS 3', link: 'https://www.nabava.net', reason: 'Savršena za 1440p gaming sa najnovijim tehnologijama' },
   { id: '4', name: 'RX 7800 XT', brand: 'AMD', price: 573, specs: '16GB GDDR6', link: 'https://www.nabava.net', reason: 'Odličan 1440p gaming sa puno VRAM-a' },
-  { id: '5', name: 'RTX 4070', brand: 'NVIDIA', price: 666, specs: '12GB GDDR6X + Ray Tracing', link: 'https://www.links.hr', reason: 'High-end 1440p i entry 4K gaming' },
+  { id: '5', name: 'RTX 4070', brand: 'NVIDIA', price: 666, specs: '12GB GDDR6X + Ray Tracing', link: 'https://www.nabava.net', reason: 'High-end 1440p i entry 4K gaming' },
   { id: '6', name: 'RTX 4080', brand: 'NVIDIA', price: 1333, specs: '16GB GDDR6X', link: 'https://www.adm.hr', reason: 'Vrhunske 4K performanse' },
-  { id: '7', name: 'RX 7900 XTX', brand: 'AMD', price: 1066, specs: '24GB GDDR6', link: 'https://www.links.hr', reason: 'Top 4K gaming sa ogromnom količinom memorije' },
+  { id: '7', name: 'RX 7900 XTX', brand: 'AMD', price: 1066, specs: '24GB GDDR6', link: 'https://www.nabava.net', reason: 'Top 4K gaming sa ogromnom količinom memorije' },
   { id: '8', name: 'RTX 4090', brand: 'NVIDIA', price: 1799, specs: '24GB GDDR6X - Flagship', link: 'https://www.ekupi.hr', reason: 'Najmoćniji igraći GPU - 4K ultra settings' },
   { id: '9', name: 'RTX 5090', brand: 'NVIDIA', price: 2199, specs: '32GB GDDR7 - Latest Gen', link: 'https://www.adm.hr', reason: 'Vrhunska nova generacija - nenadmašne performanse' },
 ]
 
 const ramOptions: Component[] = [
-  { id: '1', name: 'Corsair Vengeance 16GB', brand: 'Corsair', price: 53, specs: 'DDR4 3200MHz', link: 'https://www.links.hr/hr/racunala-komponente/memorije-ram', reason: 'Minimum za gaming - pouzdana memorija' },
+  { id: '1', name: 'Corsair Vengeance 16GB', brand: 'Corsair', price: 53, specs: 'DDR4 3200MHz', link: 'https://www.nabava.net/hr/racunala-komponente/memorije-ram', reason: 'Minimum za gaming - pouzdana memorija' },
   { id: '2', name: 'Kingston Fury 16GB', brand: 'Kingston', price: 59, specs: 'DDR4 3600MHz', link: 'https://www.nabava.net/', reason: 'Brža DDR4 opcija za bolje performanse' },
-  { id: '3', name: 'Corsair Vengeance 32GB', brand: 'Corsair', price: 119, specs: 'DDR5 6000MHz', link: 'https://www.links.hr/hr/racunala-komponente/memorije-ram', reason: 'Moderna DDR5 za high-end sisteme' },
+  { id: '3', name: 'Corsair Vengeance 32GB', brand: 'Corsair', price: 119, specs: 'DDR5 6000MHz', link: 'https://www.nabava.net/hr/racunala-komponente/memorije-ram', reason: 'Moderna DDR5 za high-end sisteme' },
   { id: '4', name: 'G.Skill Trident Z5 32GB', brand: 'G.Skill', price: 146, specs: 'DDR5 6400MHz + RGB', link: 'https://www.adm.hr/', reason: 'Premium memorija sa RGB osvetljenjem' },
   { id: '5', name: 'Kingston Fury 64GB', brand: 'Kingston', price: 239, specs: 'DDR5 6000MHz', link: 'https://www.nabava.net/', reason: 'Za kreativni rad i teške aplikacije' },
 ]
 
 const storageOptions: Component[] = [
   { id: '1', name: 'Kingston NV2 500GB', brand: 'Kingston', price: 39, specs: 'NVMe Gen4, 3500MB/s', link: 'https://www.nabava.net/', reason: 'Budžet NVMe - dovoljan za OS i igre' },
-  { id: '2', name: 'WD Blue SN580 1TB', brand: 'WD', price: 66, specs: 'NVMe Gen4, 4150MB/s', link: 'https://www.links.hr/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Solidan mid-range SSD sa dobrim performansama' },
-  { id: '3', name: 'Samsung 980 PRO 1TB', brand: 'Samsung', price: 106, specs: 'NVMe Gen4, 7000MB/s', link: 'https://www.links.hr/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Premium SSD sa vrhunskim brzinama' },
+  { id: '2', name: 'WD Blue SN580 1TB', brand: 'WD', price: 66, specs: 'NVMe Gen4, 4150MB/s', link: 'https://www.nabava.net/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Solidan mid-range SSD sa dobrim performansama' },
+  { id: '3', name: 'Samsung 980 PRO 1TB', brand: 'Samsung', price: 106, specs: 'NVMe Gen4, 7000MB/s', link: 'https://www.nabava.net/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Premium SSD sa vrhunskim brzinama' },
   { id: '4', name: 'WD Black SN850X 2TB', brand: 'WD', price: 199, specs: 'NVMe Gen4, 7300MB/s', link: 'https://www.adm.hr/', reason: 'Top gaming SSD sa velikom količinom prostora' },
   { id: '5', name: 'Crucial P5 Plus 2TB', brand: 'Crucial', price: 173, specs: 'NVMe Gen4, 6600MB/s', link: 'https://www.nabava.net/', reason: 'Odličan balans cijene i performansi za 2TB' },
 ]
 
 const psuOptions: Component[] = [
-  { id: '1', name: 'Cooler Master 550W', brand: 'Cooler Master', price: 53, specs: '550W, 80+ Bronze', link: 'https://www.links.hr/hr/racunala-komponente/napajanja-za-racunala', reason: 'Budžet napajanje za osnovne sisteme' },
-  { id: '2', name: 'Corsair CX650', brand: 'Corsair', price: 66, specs: '650W, 80+ Bronze', link: 'https://www.links.hr/hr/racunala-komponente/napajanja-za-racunala', reason: 'Pouzdano napajanje za mid-range gaming' },
+  { id: '1', name: 'Cooler Master 550W', brand: 'Cooler Master', price: 53, specs: '550W, 80+ Bronze', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Budžet napajanje za osnovne sisteme' },
+  { id: '2', name: 'Corsair CX650', brand: 'Corsair', price: 66, specs: '650W, 80+ Bronze', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Pouzdano napajanje za mid-range gaming' },
   { id: '3', name: 'Seasonic Focus GX-750', brand: 'Seasonic', price: 106, specs: '750W, 80+ Gold', link: 'https://www.adm.hr/', reason: 'Kvalitetno napajanje sa Gold certifikatom' },
-  { id: '4', name: 'Corsair RM850x', brand: 'Corsair', price: 133, specs: '850W, 80+ Gold, Modularno', link: 'https://www.links.hr/hr/racunala-komponente/napajanja-za-racunala', reason: 'Premium modularno napajanje za high-end sisteme' },
+  { id: '4', name: 'Corsair RM850x', brand: 'Corsair', price: 133, specs: '850W, 80+ Gold, Modularno', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Premium modularno napajanje za high-end sisteme' },
   { id: '5', name: 'Seasonic Focus GX-1000', brand: 'Seasonic', price: 173, specs: '1000W, 80+ Gold', link: 'https://www.adm.hr/', reason: 'Za najzahtjevnije konfiguracije' },
   { id: '6', name: 'be quiet! Straight Power 11', brand: 'be quiet!', price: 199, specs: '1000W, 80+ Platinum', link: 'https://www.nabava.net/', reason: 'Top tier napajanje - tiho i efikasno' },
 ]
 
 const caseOptions: Component[] = [
-  { id: '1', name: 'Cooler Master Q300L', brand: 'Cooler Master', price: 46, specs: 'Micro-ATX', link: 'https://www.links.hr/hr/racunala-komponente/kucista-za-racunala', reason: 'Kompaktno budžet kućište' },
+  { id: '1', name: 'Cooler Master Q300L', brand: 'Cooler Master', price: 46, specs: 'Micro-ATX', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Kompaktno budžet kućište' },
   { id: '2', name: 'NZXT H510', brand: 'NZXT', price: 79, specs: 'ATX, Minimalistički dizajn', link: 'https://www.nabava.net/', reason: 'Čist dizajn i lako upravljanje kablovima' },
-  { id: '3', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, specs: 'ATX, Odlična ventilacija', link: 'https://www.links.hr/hr/racunala-komponente/kucista-za-racunala', reason: 'Izvrsna cirkulacija zraka - hladni sistem' },
+  { id: '3', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, specs: 'ATX, Odlična ventilacija', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Izvrsna cirkulacija zraka - hladni sistem' },
   { id: '4', name: 'NZXT H7 Flow', brand: 'NZXT', price: 133, specs: 'ATX, RGB osvetljenje', link: 'https://www.nabava.net/', reason: 'Premium izgled sa RGB detaljima' },
-  { id: '5', name: 'Lian Li O11 Dynamic', brand: 'Lian Li', price: 159, specs: 'ATX, Showcase dizajn', link: 'https://www.links.hr/hr/racunala-komponente/kucista-za-racunala', reason: 'Za pokazivanje komponenti - potpuno staklo' },
+  { id: '5', name: 'Lian Li O11 Dynamic', brand: 'Lian Li', price: 159, specs: 'ATX, Showcase dizajn', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Za pokazivanje komponenti - potpuno staklo' },
   { id: '6', name: 'Fractal Torrent', brand: 'Fractal', price: 199, specs: 'ATX, Maksimalna ventilacija', link: 'https://www.adm.hr/', reason: 'Najbolja cirkulacija na tržištu' },
 ]
 
@@ -841,12 +841,13 @@ function BuilderContent() {
                 <h4 className="font-bold mb-3 text-lg">Gdje kupiti u Hrvatskoj:</h4>
                 <div className="space-y-2">
                   {[
-                    { name: 'Links.hr', url: 'https://www.links.hr', icon: '🔗' },
                     { name: 'Nabava.net', url: 'https://www.nabava.net', icon: '🛒' },
                     { name: 'ADM.hr', url: 'https://www.adm.hr', icon: '💻' },
                     { name: 'eKupi.hr', url: 'https://www.ekupi.hr', icon: '🏪' },
-                    { name: 'Jagnje.com', url: 'https://www.jagnje.com', icon: '⚡' },
-                    { name: 'Centarzona.com', url: 'https://www.centarzona.com', icon: '🎮' }
+                    { name: 'BigBang.hr', url: 'https://www.bigbang.hr', icon: '⚡' },
+                    { name: 'Instar', url: 'https://www.instar-informatika.hr', icon: '🔧' },
+                    { name: 'Svijet Medija', url: 'https://www.svijet-medija.hr', icon: '📱' },
+                    { name: 'Amazon.de', url: 'https://www.amazon.de', icon: '📦' }
                   ].map((shop) => (
                     <a
                       key={shop.name}
