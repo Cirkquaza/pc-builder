@@ -110,9 +110,11 @@ export default function Builder() {
     const config = searchParams.get('config')
     if (config) {
       try {
-        const decoded = JSON.parse(Buffer.from(config, 'base64').toString())
-        setSelected(decoded.selected || {})
-        setBudget(decoded.budget || 0)
+        // Browser-safe base64 decoding
+        const decoded = decodeURIComponent(atob(config).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
+        const parsed = JSON.parse(decoded)
+        setSelected(parsed.selected || {})
+        setBudget(parsed.budget || 0)
         setShowResult(true)
         setBuildMode('manual')
       } catch (e) {
@@ -184,7 +186,9 @@ export default function Builder() {
       selected: selected,
       budget: budget
     }
-    const encoded = Buffer.from(JSON.stringify(configData)).toString('base64')
+    // Browser-safe base64 encoding
+    const jsonString = JSON.stringify(configData)
+    const encoded = btoa(encodeURIComponent(jsonString).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode(parseInt(p1, 16))))
     const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
     const link = `${baseUrl}/builder?config=${encoded}`
     setShareLink(link)
