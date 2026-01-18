@@ -302,26 +302,26 @@ function BuilderContent() {
 
   const [selectedBrand, setSelectedBrand] = useState<string | null>(null)
 
-  let filteredOptions = selectedBrand 
-    ? currentStep?.options.filter(opt => opt.brand === selectedBrand)
-    : currentStep?.options
-
-  // Calculate actual minimum needed for remaining steps
+  // Calculate actual minimum needed for remaining steps with some flexibility
   const calculateMinForRemainingSteps = () => {
     let minNeeded = 0
     const remainingSteps = steps.length - step - 1
     
     if (remainingSteps > 0) {
-      // Get the cheapest component from each remaining step
+      // Use average price instead of minimum to be more flexible
+      // This allows better component selection while still preventing overspending
       for (let i = step + 1; i < steps.length; i++) {
-        const cheapestInStep = steps[i].options.reduce((min, opt) => 
-          opt.price < min.price ? opt : min
-        )
-        minNeeded += cheapestInStep.price
+        const stepOptions = steps[i].options
+        const average = stepOptions.reduce((sum, opt) => sum + opt.price, 0) / stepOptions.length
+        minNeeded += average * 0.5 // Use only 50% of average as buffer for flexibility
       }
     }
-    return minNeeded
+    return Math.ceil(minNeeded)
   }
+
+  let filteredOptions = selectedBrand 
+    ? currentStep?.options.filter(opt => opt.brand === selectedBrand)
+    : currentStep?.options
 
   const minNeededForRest = calculateMinForRemainingSteps()
 
