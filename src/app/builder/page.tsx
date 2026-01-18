@@ -537,7 +537,9 @@ export default function Builder() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => {
-                          setStep(steps.findIndex(s => s.key === key))
+                          const stepIndex = steps.findIndex(s => s.key === key)
+                          setStep(stepIndex)
+                          setShowResult(false)
                         }}
                         className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
                       >
