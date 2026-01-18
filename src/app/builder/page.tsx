@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 interface Component {
   id: string
@@ -101,6 +102,24 @@ export default function Builder() {
   const [customBudget, setCustomBudget] = useState<string>('')
   const [buildMode, setBuildMode] = useState<'auto' | 'manual' | null>(null)
   const [isReplacing, setIsReplacing] = useState(false)
+  const [shareLink, setShareLink] = useState<string>('')
+  const searchParams = useSearchParams()
+
+  // Učitaj konfiguraciju iz URL-a
+  useEffect(() => {
+    const config = searchParams.get('config')
+    if (config) {
+      try {
+        const decoded = JSON.parse(Buffer.from(config, 'base64').toString())
+        setSelected(decoded.selected || {})
+        setBudget(decoded.budget || 0)
+        setShowResult(true)
+        setBuildMode('manual')
+      } catch (e) {
+        console.error('Greška pri učitavanju konfiguracije:', e)
+      }
+    }
+  }, [searchParams])
 
   const budgetPresets = [
     { name: 'Početni nivo', amount: 1000, icon: '🌱', description: 'Osnovni PC za svakodnevne potrebe' },
@@ -157,6 +176,33 @@ export default function Builder() {
       storage: findBestComponent(storageOptions, budgets.storage),
       psu: findBestComponent(psuOptions, budgets.psu),
       case: findBestComponent(caseOptions, budgets.case)
+    }
+  }
+
+  const generateShareLink = () => {
+    const configData = {
+      selected: selected,
+      budget: budget
+    }
+    const encoded = Buffer.from(JSON.stringify(configData)).toString('base64')
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    const link = `${baseUrl}/builder?config=${encoded}`
+    setShareLink(link)
+    return link
+  }
+
+  const handleShare = () => {
+    const link = generateShareLink()
+    if (navigator.share) {
+      navigator.share({
+        title: 'Moja PC Konfiguracija',
+        text: 'Pogledaj moju PC build konfiguraciju!',
+        url: link
+      })
+    } else {
+      // Fallback - kopiraj u clipboard
+      navigator.clipboard.writeText(link)
+      alert('Link je kopiran u clipboard!')
     }
   }
 
@@ -644,6 +690,15 @@ export default function Builder() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={handleShare}
+                className="w-full mt-6 py-3 bg-purple-600 text-white rounded-lg font-bold hover:bg-purple-700 transition"
+              >
+                🔗 Podijeli konfiguraciju
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   setStep(-1)
                   setSelected({})
@@ -651,6 +706,7 @@ export default function Builder() {
                   setBudget(0)
                   setCustomBudget('')
                   setBuildMode(null)
+                  setShareLink('')
                 }}
                 className="w-full mt-6 py-3 bg-cyan-400 text-gray-900 rounded-lg font-bold hover:bg-cyan-400 transition"
               >
