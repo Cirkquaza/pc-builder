@@ -11,17 +11,14 @@ interface ProductAvailability {
   inStock?: number
 }
 
-// Verified working retailers with proper search URLs
+// Verified working retailers with correct search URLs
 const RETAILERS = [
-  { name: 'Links.hr', domain: 'links.hr', searchUrl: 'https://www.links.hr/hr/pretraga?q=' },
   { name: 'Nabava.net', domain: 'nabava.net', searchUrl: 'https://www.nabava.net/?s=' },
   { name: 'ADM.hr', domain: 'adm.hr', searchUrl: 'https://www.adm.hr/search?q=' },
   { name: 'eKupi.hr', domain: 'ekupi.hr', searchUrl: 'https://www.ekupi.hr/search?q=' },
   { name: 'Jagnje.com', domain: 'jagnje.com', searchUrl: 'https://jagnje.com/search?q=' },
   { name: 'Centarzona.com', domain: 'centarzona.com', searchUrl: 'https://centarzona.com/pretraga?q=' },
   { name: 'Nix.hr', domain: 'nix.hr', searchUrl: 'https://www.nix.hr/search?q=' },
-  { name: 'PC kuća', domain: 'pckuca.hr', searchUrl: 'https://www.pckuca.hr/search?q=' },
-  { name: 'F.hr', domain: 'f.hr', searchUrl: 'https://www.f.hr/pretraga?q=' },
 ]
 
 export async function GET(request: NextRequest) {
