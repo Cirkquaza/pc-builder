@@ -769,7 +769,6 @@ function BuilderContent() {
                   { name: 'Nabava.net', url: 'https://www.nabava.net/' },
                   { name: 'ADM.hr', url: 'https://www.adm.hr/' },
                   { name: 'eKupi.hr', url: 'https://www.ekupi.hr/' },
-                  { name: 'Jagnje.com', url: 'https://jagnje.com/' },
                   { name: 'Centarzona.com', url: 'https://centarzona.com/' },
                   { name: 'Nix.hr', url: 'https://www.nix.hr/' },
                 ].map((shop) => (

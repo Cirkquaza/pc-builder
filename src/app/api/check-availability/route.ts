@@ -11,12 +11,11 @@ interface ProductAvailability {
   inStock?: number
 }
 
-// Verified working retailers with correct search URLs
+// Verified working retailers - tested and confirmed working
 const RETAILERS = [
   { name: 'Nabava.net', domain: 'nabava.net', searchUrl: 'https://www.nabava.net/?s=' },
   { name: 'ADM.hr', domain: 'adm.hr', searchUrl: 'https://www.adm.hr/search?q=' },
   { name: 'eKupi.hr', domain: 'ekupi.hr', searchUrl: 'https://www.ekupi.hr/search?q=' },
-  { name: 'Jagnje.com', domain: 'jagnje.com', searchUrl: 'https://jagnje.com/search?q=' },
   { name: 'Centarzona.com', domain: 'centarzona.com', searchUrl: 'https://centarzona.com/pretraga?q=' },
   { name: 'Nix.hr', domain: 'nix.hr', searchUrl: 'https://www.nix.hr/search?q=' },
 ]
