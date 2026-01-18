@@ -105,13 +105,13 @@ export default function Builder() {
   ]
 
   const steps = [
-    { title: 'Odaberi Procesor', key: 'cpu', options: cpuOptions, icon: '🔲' },
-    { title: 'Odaberi Matičnu ploču', key: 'motherboard', options: motherboardOptions, icon: '🔌' },
-    { title: 'Odaberi Grafičku', key: 'gpu', options: gpuOptions, icon: '🎮' },
-    { title: 'Odaberi RAM', key: 'ram', options: ramOptions, icon: '💾' },
-    { title: 'Odaberi Storage', key: 'storage', options: storageOptions, icon: '💿' },
-    { title: 'Odaberi Napajanje', key: 'psu', options: psuOptions, icon: '🔋' },
-    { title: 'Odaberi Kućište', key: 'case', options: caseOptions, icon: '📦' },
+    { title: 'Odabrani Procesor', key: 'cpu', options: cpuOptions, icon: '🔲' },
+    { title: 'Odabrana Matična ploča', key: 'motherboard', options: motherboardOptions, icon: '🔌' },
+    { title: 'Odabrana Grafička', key: 'gpu', options: gpuOptions, icon: '🎮' },
+    { title: 'Odabrani RAM', key: 'ram', options: ramOptions, icon: '💾' },
+    { title: 'Odabrani Storage', key: 'storage', options: storageOptions, icon: '💿' },
+    { title: 'Odabrano Napajanje', key: 'psu', options: psuOptions, icon: '🔋' },
+    { title: 'Odabrano Kućište', key: 'case', options: caseOptions, icon: '📦' },
   ]
 
   // Funkcija za automatski odabir najboljih komponenti po budžetu
@@ -528,18 +528,30 @@ export default function Builder() {
                       <p className="text-sm text-gray-300 mt-1">{component.reason}</p>
                     </motion.div>
                   )}
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-3 flex-wrap">
                     <p className="text-3xl font-bold text-cyan-400">
                       {component?.price.toLocaleString('hr-HR')} €
                     </p>
-                    <a 
-                      href={component?.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 bg-cyan-400 text-gray-900 rounded-lg font-semibold hover:bg-cyan-400 transition hover:scale-105 active:scale-95 inline-block"
-                    >
-                      Pogledaj ponudu →
-                    </a>
+                    <div className="flex gap-2">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          setStep(steps.findIndex(s => s.key === key))
+                        }}
+                        className="px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
+                      >
+                        🔄 Zamijeni
+                      </motion.button>
+                      <a 
+                        href={component?.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-cyan-400 text-gray-900 rounded-lg font-semibold hover:bg-cyan-400 transition hover:scale-105 active:scale-95 inline-block"
+                      >
+                        Pogledaj ponudu →
+                      </a>
+                    </div>
                   </div>
                 </div>
               </motion.div>

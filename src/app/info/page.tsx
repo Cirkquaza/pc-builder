@@ -223,12 +223,12 @@ export default function Info() {
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-2 text-white">Luka Ćirković</h3>
             <p className="text-cyan-300 mb-4">GitHub: Cirkquaza</p>
-            <p className="text-gray-300">Glavni developer i arhitektura projekta</p>
+            <p className="text-gray-300">Glavni developer</p>
           </div>
           <div className="text-center">
             <h3 className="text-2xl font-bold mb-2 text-white">Stipe Barišić</h3>
             <p className="text-cyan-300 mb-4">GitHub: stipzard</p>
-            <p className="text-gray-300">Saradnik i razvoj aplikacije</p>
+            <p className="text-gray-300">Glavni developer</p>
           </div>
         </div>
         <p className="text-center text-gray-400 mt-8 text-sm">
