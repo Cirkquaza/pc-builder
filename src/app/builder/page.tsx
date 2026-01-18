@@ -316,15 +316,18 @@ function BuilderContent() {
     let minNeeded = 0
     const remainingSteps = steps.length - step - 1
     
-    // On last steps, minimal or no buffer
-    if (remainingSteps > 1) {
-      // Only apply buffer for earlier steps
+    // On last step (case), no buffer needed - use all remaining budget
+    // On last 2 steps, minimal buffer
+    // On earlier steps, small buffer
+    if (remainingSteps > 2) {
+      // Only apply minimal buffer for earlier steps
       for (let i = step + 1; i < steps.length - 1; i++) {
         const stepOptions = steps[i].options
         const cheapest = stepOptions.reduce((min, opt) => opt.price < min.price ? opt : min)
-        minNeeded += cheapest.price * 0.7 // 70% of cheapest component
+        minNeeded += cheapest.price * 0.5 // 50% of cheapest component
       }
     }
+    // For last 2 steps, minNeeded stays 0 or minimal
     return Math.ceil(minNeeded)
   }
 
@@ -339,17 +342,24 @@ function BuilderContent() {
     const currentComponent = selected[currentStep.key as keyof typeof selected]
     const currentPrice = currentComponent?.price || 0
     
-    // If already selected, check if new option would fit in budget after replacement
-    // If not selected yet, check against remaining budget with buffer for remaining steps
+    // Special handling for last step - allow up to remaining budget
+    const isLastStep = step === steps.length - 1
+    
     let isAffordable = false
     if (currentComponent) {
       // Replacement mode: check if (total - old price + new price) <= budget
       const totalAfterReplacement = totalPrice - currentPrice + opt.price
       isAffordable = budget >= 999999 ? true : (totalAfterReplacement <= budget)
     } else {
-      // New selection mode: check if (total + new price + minimum for rest) <= budget
-      const spaceLeft = budget - totalPrice - minNeededForRest
-      isAffordable = budget >= 999999 ? true : (opt.price <= spaceLeft)
+      // New selection mode
+      if (isLastStep) {
+        // On last step, allow any component up to remaining budget
+        isAffordable = budget >= 999999 ? true : (opt.price <= remainingBudget)
+      } else {
+        // On earlier steps, check with buffer for remaining components
+        const spaceLeft = budget - totalPrice - minNeededForRest
+        isAffordable = budget >= 999999 ? true : (opt.price <= spaceLeft)
+      }
     }
     
     return {
