@@ -207,10 +207,19 @@ function BuilderContent() {
     }
 
     const findBestComponent = (options: Component[], targetPrice: number) => {
-      return options.reduce((best, current) => {
+      // Filter only components that fit within target price (strict)
+      const affordable = options.filter(opt => opt.price <= targetPrice)
+      
+      if (affordable.length === 0) {
+        // If nothing fits in target, pick the cheapest overall
+        return options.reduce((min, current) => current.price < min.price ? current : min)
+      }
+      
+      // Among affordable ones, pick closest to target
+      return affordable.reduce((best, current) => {
         const bestDiff = Math.abs(best.price - targetPrice)
         const currentDiff = Math.abs(current.price - targetPrice)
-        return currentDiff < bestDiff && current.price <= targetPrice * 1.2 ? current : best
+        return currentDiff < bestDiff ? current : best
       })
     }
 
