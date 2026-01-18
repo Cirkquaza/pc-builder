@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
@@ -93,7 +93,32 @@ const caseOptions: Component[] = [
   { id: '6', name: 'Fractal Torrent', brand: 'Fractal', price: 199, specs: 'ATX, Maksimalna ventilacija', link: 'https://www.adm.hr/', reason: 'Najbolja cirkulacija na tržištu' },
 ]
 
-export default function Builder() {
+export default function BuilderPage() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <BuilderContent />
+    </Suspense>
+  )
+}
+
+function LoadingScreen() {
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-900">
+      <div className="text-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="text-6xl mb-4"
+        >
+          ⚙️
+        </motion.div>
+        <p className="text-gray-300 text-lg">Učitavanje...</p>
+      </div>
+    </div>
+  )
+}
+
+function BuilderContent() {
   const [step, setStep] = useState(-1)
   const [selected, setSelected] = useState<SelectedComponents>({})
   const [isGenerating, setIsGenerating] = useState(false)
