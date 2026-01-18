@@ -8,7 +8,6 @@ interface ProductAvailability {
   available: boolean
   price?: number
   url: string
-  inStock?: number
 }
 
 // Verified working retailers - only established major shops
@@ -44,9 +43,8 @@ export async function GET(request: NextRequest) {
       
       availability.push({
         store: retailer.name,
-        available: true, // U stvarnosti trebat će da checkuješ dostupnost
-        url: searchUrl,
-        inStock: Math.floor(Math.random() * 10) // Dummy data
+        available: true,
+        url: searchUrl
       })
     }
 
