@@ -159,6 +159,7 @@ function BuilderContent() {
         const parsed = JSON.parse(decoded)
         setSelected(parsed.selected || {})
         setBudget(parsed.budget || 0)
+        setStep(6) // Postavi na završni korak da prikaži rezultat
         setShowResult(true)
         setBuildMode('manual')
       } catch (e) {
