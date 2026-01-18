@@ -130,6 +130,7 @@ function BuilderContent() {
   const [shareLink, setShareLink] = useState<string>('')
   const [availabilityLoading, setAvailabilityLoading] = useState<string | null>(null)
   const [availability, setAvailability] = useState<Record<string, any>>({})
+  const [isLoadingShare, setIsLoadingShare] = useState(false)
   const searchParams = useSearchParams()
 
   // Provjeri dostupnost komponente
@@ -153,6 +154,7 @@ function BuilderContent() {
   useEffect(() => {
     const config = searchParams.get('config')
     if (config) {
+      setIsLoadingShare(true)
       try {
         // Browser-safe base64 decoding
         const decoded = decodeURIComponent(atob(config).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
@@ -165,6 +167,7 @@ function BuilderContent() {
       } catch (e) {
         console.error('Greška pri učitavanju konfiguracije:', e)
       }
+      setIsLoadingShare(false)
     }
   }, [searchParams])
 
@@ -404,7 +407,7 @@ function BuilderContent() {
   }
 
   // Budget selection screen
-  if (budget === 0) {
+  if (budget === 0 && !isLoadingShare) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
