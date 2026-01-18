@@ -306,14 +306,29 @@ function BuilderContent() {
     ? currentStep?.options.filter(opt => opt.brand === selectedBrand)
     : currentStep?.options
 
+  // Calculate actual minimum needed for remaining steps
+  const calculateMinForRemainingSteps = () => {
+    let minNeeded = 0
+    const remainingSteps = steps.length - step - 1
+    
+    if (remainingSteps > 0) {
+      // Get the cheapest component from each remaining step
+      for (let i = step + 1; i < steps.length; i++) {
+        const cheapestInStep = steps[i].options.reduce((min, opt) => 
+          opt.price < min.price ? opt : min
+        )
+        minNeeded += cheapestInStep.price
+      }
+    }
+    return minNeeded
+  }
+
+  const minNeededForRest = calculateMinForRemainingSteps()
+
   filteredOptions = filteredOptions?.map(opt => {
     // Get currently selected component for this step
     const currentComponent = selected[currentStep.key as keyof typeof selected]
     const currentPrice = currentComponent?.price || 0
-    
-    // Calculate minimum needed for remaining steps
-    const remainingSteps = steps.length - step - 1
-    const minNeededForRest = remainingSteps > 0 ? remainingSteps * 50 : 0 // ~50€ minimum per component
     
     // If already selected, check if new option would fit in budget after replacement
     // If not selected yet, check against remaining budget with buffer for remaining steps
