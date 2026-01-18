@@ -257,10 +257,10 @@ function BuilderContent() {
   const currentStep = steps[step]
 
   const handleSelect = (component: Component) => {
-    // Calculate new total if this component is selected
+    // Calculate what total would be with this component selected
     const currentComponent = selected[currentStep.key as keyof typeof selected]
-    const priceDifference = (component.price || 0) - (currentComponent?.price || 0)
-    const newTotal = totalPrice + priceDifference
+    const currentPrice = currentComponent?.price || 0
+    const newTotal = totalPrice - currentPrice + (component.price || 0)
     
     // Check budget constraint (unless unlimited budget)
     if (budget < 999999 && newTotal > budget) {
@@ -306,10 +306,28 @@ function BuilderContent() {
     ? currentStep?.options.filter(opt => opt.brand === selectedBrand)
     : currentStep?.options
 
-  filteredOptions = filteredOptions?.map(opt => ({
-    ...opt,
-    isAffordable: budget >= 999999 ? true : (opt.price <= remainingBudget)
-  }))
+  filteredOptions = filteredOptions?.map(opt => {
+    // Get currently selected component for this step
+    const currentComponent = selected[currentStep.key as keyof typeof selected]
+    const currentPrice = currentComponent?.price || 0
+    
+    // If already selected, check if new option would fit in budget after replacement
+    // If not selected yet, check against remaining budget
+    let isAffordable = false
+    if (currentComponent) {
+      // Replacement mode: check if (total - old price + new price) <= budget
+      const totalAfterReplacement = totalPrice - currentPrice + opt.price
+      isAffordable = budget >= 999999 ? true : (totalAfterReplacement <= budget)
+    } else {
+      // New selection mode: check if (total + new price) <= budget
+      isAffordable = budget >= 999999 ? true : (totalPrice + opt.price <= budget)
+    }
+    
+    return {
+      ...opt,
+      isAffordable
+    }
+  })
 
   if (isGenerating) {
     return (
