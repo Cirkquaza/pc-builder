@@ -128,7 +128,26 @@ function BuilderContent() {
   const [buildMode, setBuildMode] = useState<'auto' | 'manual' | null>(null)
   const [isReplacing, setIsReplacing] = useState(false)
   const [shareLink, setShareLink] = useState<string>('')
+  const [availabilityLoading, setAvailabilityLoading] = useState<string | null>(null)
+  const [availability, setAvailability] = useState<Record<string, any>>({})
   const searchParams = useSearchParams()
+
+  // Provjeri dostupnost komponente
+  const checkAvailability = async (component: Component) => {
+    setAvailabilityLoading(component.id)
+    try {
+      const response = await fetch(`/api/check-availability?brand=${encodeURIComponent(component.brand)}&model=${encodeURIComponent(component.name)}`)
+      const data = await response.json()
+      setAvailability(prev => ({
+        ...prev,
+        [component.id]: data.results || []
+      }))
+    } catch (error) {
+      console.error('Greška pri provjeri dostupnosti:', error)
+    } finally {
+      setAvailabilityLoading(null)
+    }
+  }
 
   // Učitaj konfiguraciju iz URL-a
   useEffect(() => {
@@ -238,6 +257,16 @@ function BuilderContent() {
   const currentStep = steps[step]
 
   const handleSelect = (component: Component) => {
+    // Calculate new total if this component is selected
+    const currentComponent = selected[currentStep.key as keyof typeof selected]
+    const priceDifference = (component.price || 0) - (currentComponent?.price || 0)
+    const newTotal = totalPrice + priceDifference
+    
+    // Check budget constraint (unless unlimited budget)
+    if (budget < 999999 && newTotal > budget) {
+      return // Don't allow selection if it exceeds budget
+    }
+
     const newSelected = { ...selected, [currentStep.key]: component }
     setSelected(newSelected)
 
@@ -279,7 +308,7 @@ function BuilderContent() {
 
   filteredOptions = filteredOptions?.map(opt => ({
     ...opt,
-    isAffordable: opt.price <= remainingBudget
+    isAffordable: budget >= 999999 ? true : (opt.price <= remainingBudget)
   }))
 
   if (isGenerating) {
@@ -629,15 +658,41 @@ function BuilderContent() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => {
-                          alert(`Gdje kupiti ${component?.brand} ${component?.name}:\n\nTražite proizvod na:\n• Informatika\n• Santa Domenica\n• Links.hr\n• Nabava.net\n• ADM.hr\n• eKupi.hr\n• Jagnje.com\n• Centarzona.com\n• Nix.hr\n• PC kuća`)
-                        }}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
+                        onClick={() => checkAvailability(component!)}
+                        disabled={availabilityLoading === component?.id}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
                       >
-                        🔍 Gdje kupiti
+                        {availabilityLoading === component?.id ? '🔍 Pretražujem...' : '🔍 Gdje kupiti'}
                       </motion.button>
                     </div>
                   </div>
+                  
+                  {/* Dostupnost komponente */}
+                  {availability[component?.id || ''] && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-4 space-y-2 bg-green-900/20 border border-green-400/30 p-4 rounded-lg"
+                    >
+                      <h4 className="font-bold text-green-400 mb-3">💚 Dostupno na:</h4>
+                      {availability[component?.id || '']?.map((retailer: any, idx: number) => (
+                        <a
+                          key={idx}
+                          href={retailer.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-between p-3 bg-gray-700/50 hover:bg-green-400/20 border border-green-400/20 hover:border-green-400 rounded-lg transition group"
+                        >
+                          <div>
+                            <p className="font-semibold text-gray-100 group-hover:text-green-300">{retailer.store}</p>
+                            {retailer.inStock && <p className="text-xs text-gray-400">Na zalihi: {retailer.inStock}</p>}
+                          </div>
+                          <span className="text-green-400 group-hover:translate-x-1 transition">→</span>
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
                 </div>
               </motion.div>
             ))}
@@ -827,7 +882,9 @@ function BuilderContent() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {options?.map((option, index) => {
-            const isAffordable = selectedComponent ? (budget - (totalPrice - (selectedComponent.price || 0)) - option.price >= 0) : (budget - totalPrice - option.price >= 0)
+            // In replacement mode, calculate affordability accounting for the old component being removed
+            const budgetAfterRemoval = budget - (totalPrice - (selectedComponent?.price || 0))
+            const isAffordable = budget >= 999999 ? true : (budgetAfterRemoval - option.price >= 0)
             return (
               <motion.button
                 key={option.id}
