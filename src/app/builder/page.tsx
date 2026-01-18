@@ -769,6 +769,10 @@ function BuilderContent() {
                   { name: 'Nabava.net', url: 'https://www.nabava.net/' },
                   { name: 'ADM.hr', url: 'https://www.adm.hr/' },
                   { name: 'eKupi.hr', url: 'https://www.ekupi.hr/' },
+                  { name: 'BigBang.hr', url: 'https://www.bigbang.hr/' },
+                  { name: 'Instar', url: 'https://www.instar-informatika.hr/' },
+                  { name: 'Svijet Medija', url: 'https://www.svijet-medija.hr/' },
+                  { name: 'Amazon.de', url: 'https://www.amazon.de/' },
                 ].map((shop) => (
                   <a
                     key={shop.name}
