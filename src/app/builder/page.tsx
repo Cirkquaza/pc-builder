@@ -956,6 +956,7 @@ function BuilderContent() {
                     setSelected(newSelected)
                     setIsReplacing(false)
                     setShowResult(true)
+                    setShareLink('') // Resetiraj share link nakon zamjene
                   }
                 }}
                 disabled={!isAffordable && budget < 999999}
