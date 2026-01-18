@@ -159,7 +159,12 @@ function BuilderContent() {
         const parsed = JSON.parse(decoded)
         setSelected(parsed.selected || {})
         setBudget(parsed.budget || 0)
-        // Ne prikazuj rezultat odmah - korisnik počinje od početka
+        // Ako ima konfiguracije iz URL-a, prikaži je direktno
+        if (parsed.selected && Object.keys(parsed.selected).length > 0) {
+          setShowResult(true)
+          setStep(6)
+          setBuildMode('manual')
+        }
       } catch (e) {
         console.error('Greška pri učitavanju konfiguracije:', e)
       }
