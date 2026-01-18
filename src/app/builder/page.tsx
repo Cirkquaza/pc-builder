@@ -157,10 +157,17 @@ function BuilderContent() {
         // Browser-safe base64 decoding
         const decoded = decodeURIComponent(atob(config).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
         const parsed = JSON.parse(decoded)
-        setSelected(parsed.selected || {})
-        setBudget(parsed.budget || 0)
-        // Ako ima konfiguracije iz URL-a, prikaži je direktno
-        if (parsed.selected && Object.keys(parsed.selected).length > 0) {
+        
+        // Postavi komponente i budžet iz URL-a
+        if (parsed.selected) {
+          setSelected(parsed.selected)
+        }
+        if (parsed.budget) {
+          setBudget(parsed.budget)
+        }
+        
+        // Ako ima sačuvane konfiguracije, prikaži je direktno
+        if (parsed.selected && Object.keys(parsed.selected).length > 0 && parsed.budget) {
           setShowResult(true)
           setStep(6)
           setBuildMode('manual')
