@@ -756,8 +756,6 @@ function BuilderContent() {
               <h3 className="text-2xl font-bold mb-4 text-green-400">🛒 Gdje kupiti komponente u Hrvatskoj</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {[
-                  { name: 'Informatika', url: 'https://informatika.hr' },
-                  { name: 'Santa Domenica', url: 'https://santadomenica.hr' },
                   { name: 'Links.hr', url: 'https://links.hr' },
                   { name: 'Nabava.net', url: 'https://nabava.net' },
                   { name: 'ADM.hr', url: 'https://adm.hr' },

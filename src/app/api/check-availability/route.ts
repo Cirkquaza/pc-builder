@@ -13,12 +13,16 @@ interface ProductAvailability {
 
 // Dummy data - trebat će da zamjeniš sa stvarnim API pozivima
 const RETAILERS = [
-  { name: 'Informatika', domain: 'informatika.hr', searchUrl: 'https://informatika.hr/search?q=' },
-  { name: 'Santa Domenica', domain: 'santadomenica.hr', searchUrl: 'https://santadomenica.hr/pretraga?q=' },
   { name: 'Links.hr', domain: 'links.hr', searchUrl: 'https://links.hr/hr/pretraga?q=' },
   { name: 'Nabava.net', domain: 'nabava.net', searchUrl: 'https://nabava.net/?s=' },
   { name: 'ADM.hr', domain: 'adm.hr', searchUrl: 'https://adm.hr/search?q=' },
   { name: 'eKupi.hr', domain: 'ekupi.hr', searchUrl: 'https://ekupi.hr/search?q=' },
+  { name: 'Jagnje.com', domain: 'jagnje.com', searchUrl: 'https://jagnje.com/search?q=' },
+  { name: 'Centarzona.com', domain: 'centarzona.com', searchUrl: 'https://centarzona.com/pretraga?q=' },
+  { name: 'Nix.hr', domain: 'nix.hr', searchUrl: 'https://nix.hr/search?q=' },
+  { name: 'PC kuća', domain: 'pckuca.hr', searchUrl: 'https://pckuca.hr/search?q=' },
+  { name: 'F.hr', domain: 'f.hr', searchUrl: 'https://f.hr/pretraga?q=' },
+  { name: 'Hub.hr', domain: 'hub.hr', searchUrl: 'https://hub.hr/search?q=' },
 ]
 
 export async function GET(request: NextRequest) {
