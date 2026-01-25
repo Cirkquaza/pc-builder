@@ -65,14 +65,13 @@ export function ProductsLoader({ categories, children }: ProductsLoaderProps) {
       <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="text-center">
           <motion.div
+            initial={{ rotate: 0 }}
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className="text-6xl mb-4"
-          >
-            âš™ď¸Ź
-          </motion.div>
-          <p className="text-gray-300 text-lg">UÄŤitavanje proizvoda...</p>
-          <p className="text-gray-500 text-sm mt-2">DohvaÄ‡am podatke iz BigBang-a</p>
+            transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+            className="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <p className="text-gray-300 text-lg">Učitavanje proizvoda...</p>
+          <p className="text-gray-500 text-sm mt-2">Dohvaćam podatke iz BigBang-a</p>
         </div>
       </div>
     );
