@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, ReactNode } from 'react';
 import { useProducts, Component } from './useProducts';
@@ -53,7 +53,7 @@ export function ProductsLoader({ categories, children }: ProductsLoaderProps) {
       }
 
       setAllProducts(results);
-      setError(hasError ? 'Neki proizvodi nisu učitani iz API-ja' : null);
+      setError(hasError ? 'Neki proizvodi nisu uÄŤitani iz API-ja' : null);
       setLoading(false);
     }
 
@@ -69,10 +69,10 @@ export function ProductsLoader({ categories, children }: ProductsLoaderProps) {
             transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
             className="text-6xl mb-4"
           >
-            ⚙️
+            âš™ď¸Ź
           </motion.div>
-          <p className="text-gray-300 text-lg">Učitavanje proizvoda...</p>
-          <p className="text-gray-500 text-sm mt-2">Dohvaćam podatke iz BigBang-a</p>
+          <p className="text-gray-300 text-lg">UÄŤitavanje proizvoda...</p>
+          <p className="text-gray-500 text-sm mt-2">DohvaÄ‡am podatke iz BigBang-a</p>
         </div>
       </div>
     );
@@ -121,30 +121,30 @@ function extractSpecs(name: string): string {
 function generateReason(product: any, category: string): string {
   const price = product.finalPrice || product.price;
   
-  if (price < 100) return 'Budžet opcija - odličan početak';
+  if (price < 100) return 'BudĹľet opcija - odliÄŤan poÄŤetak';
   if (price < 300) return 'Solidan balans cijene i performansi';
   if (price < 600) return 'High-end performanse';
   return 'Premium - vrhunska klasa';
 }
 
-const bigBangSearch = (name: string) => `https://www.bigbang.hr/proizvodi?q=${encodeURIComponent(name)}`;
+const bigBangSearch = (name: string) => `https://www.bigbang.hr/proizvodi/?search_q=${encodeURIComponent(name)}`;
 
 function getFallbackProducts(category: string): Component[] {
   const fallbacks: Record<string, Component[]> = {
     cpu: [
-      { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, finalPrice: 139, specs: '6C/12T, 4.4GHz', link: bigBangSearch('Ryzen 5 5600'), url: bigBangSearch('Ryzen 5 5600'), image: '', category: 'CPU', inStock: true, stock: 5, discount: 0, description: '', reason: 'Idealan za početni gaming' },
+      { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, finalPrice: 139, specs: '6C/12T, 4.4GHz', link: bigBangSearch('Ryzen 5 5600'), url: bigBangSearch('Ryzen 5 5600'), image: '', category: 'CPU', inStock: true, stock: 5, discount: 0, description: '', reason: 'Idealan za poÄŤetni gaming' },
       { id: '2', name: 'Ryzen 7 7800X3D', brand: 'AMD', price: 439, finalPrice: 439, specs: '8C/16T, 5.0GHz + 3D V-Cache', link: bigBangSearch('Ryzen 7 7800X3D'), url: bigBangSearch('Ryzen 7 7800X3D'), image: '', category: 'CPU', inStock: true, stock: 3, discount: 0, description: '', reason: 'Najbolji gaming procesor' },
     ],
     gpu: [
       { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, finalPrice: 259, specs: '8GB GDDR6', link: bigBangSearch('RTX 3050'), url: bigBangSearch('RTX 3050'), image: '', category: 'GPU', inStock: true, stock: 10, discount: 0, description: '', reason: 'Entry-level gaming' },
-      { id: '2', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, finalPrice: 429, specs: '8GB GDDR6X + DLSS 3', link: bigBangSearch('RTX 4060 Ti'), url: bigBangSearch('RTX 4060 Ti'), image: '', category: 'GPU', inStock: true, stock: 7, discount: 0, description: '', reason: 'Odličan za 1440p gaming' },
+      { id: '2', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, finalPrice: 429, specs: '8GB GDDR6X + DLSS 3', link: bigBangSearch('RTX 4060 Ti'), url: bigBangSearch('RTX 4060 Ti'), image: '', category: 'GPU', inStock: true, stock: 7, discount: 0, description: '', reason: 'OdliÄŤan za 1440p gaming' },
     ],
     ram: [
       { id: '1', name: 'Corsair Vengeance 16GB', brand: 'Corsair', price: 53, finalPrice: 53, specs: 'DDR4 3200MHz', link: bigBangSearch('Corsair Vengeance 16GB DDR4 3200'), url: bigBangSearch('Corsair Vengeance 16GB DDR4 3200'), image: '', category: 'RAM', inStock: true, stock: 15, discount: 0, description: '', reason: 'Pouzdana memorija' },
       { id: '2', name: 'Corsair Vengeance 32GB', brand: 'Corsair', price: 119, finalPrice: 119, specs: 'DDR5 6000MHz', link: bigBangSearch('Corsair Vengeance 32GB DDR5 6000'), url: bigBangSearch('Corsair Vengeance 32GB DDR5 6000'), image: '', category: 'RAM', inStock: true, stock: 10, discount: 0, description: '', reason: 'Moderna DDR5' },
     ],
     motherboard: [
-      { id: '1', name: 'B550 GAMING PLUS', brand: 'MSI', price: 119, finalPrice: 119, specs: 'AMD AM4, DDR4, PCIe 4.0', link: bigBangSearch('MSI B550 Gaming Plus'), url: bigBangSearch('MSI B550 Gaming Plus'), image: '', category: 'Motherboard', inStock: true, stock: 8, discount: 0, description: '', reason: 'Odličan balans funkcija' },
+      { id: '1', name: 'B550 GAMING PLUS', brand: 'MSI', price: 119, finalPrice: 119, specs: 'AMD AM4, DDR4, PCIe 4.0', link: bigBangSearch('MSI B550 Gaming Plus'), url: bigBangSearch('MSI B550 Gaming Plus'), image: '', category: 'Motherboard', inStock: true, stock: 8, discount: 0, description: '', reason: 'OdliÄŤan balans funkcija' },
       { id: '2', name: 'B650 AORUS ELITE', brand: 'Gigabyte', price: 199, finalPrice: 199, specs: 'AMD AM5, DDR5, PCIe 5.0', link: bigBangSearch('Gigabyte B650 AORUS Elite'), url: bigBangSearch('Gigabyte B650 AORUS Elite'), image: '', category: 'Motherboard', inStock: true, stock: 5, discount: 0, description: '', reason: 'Moderna platforma sa DDR5' },
     ],
     storage: [
@@ -156,10 +156,11 @@ function getFallbackProducts(category: string): Component[] {
       { id: '2', name: 'Seasonic Focus GX-750', brand: 'Seasonic', price: 106, finalPrice: 106, specs: '750W, 80+ Gold', link: bigBangSearch('Seasonic Focus GX-750'), url: bigBangSearch('Seasonic Focus GX-750'), image: '', category: 'PSU', inStock: true, stock: 8, discount: 0, description: '', reason: 'Kvalitetno Gold napajanje' },
     ],
     case: [
-      { id: '1', name: 'NZXT H510', brand: 'NZXT', price: 79, finalPrice: 79, specs: 'ATX, Minimalistički dizajn', link: bigBangSearch('NZXT H510'), url: bigBangSearch('NZXT H510'), image: '', category: 'Case', inStock: true, stock: 6, discount: 0, description: '', reason: 'Čist dizajn' },
-      { id: '2', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, finalPrice: 106, specs: 'ATX, Odlična ventilacija', link: bigBangSearch('Corsair 4000D Airflow'), url: bigBangSearch('Corsair 4000D Airflow'), image: '', category: 'Case', inStock: true, stock: 10, discount: 0, description: '', reason: 'Izvrsna cirkulacija' },
+      { id: '1', name: 'NZXT H510', brand: 'NZXT', price: 79, finalPrice: 79, specs: 'ATX, MinimalistiÄŤki dizajn', link: bigBangSearch('NZXT H510'), url: bigBangSearch('NZXT H510'), image: '', category: 'Case', inStock: true, stock: 6, discount: 0, description: '', reason: 'ÄŚist dizajn' },
+      { id: '2', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, finalPrice: 106, specs: 'ATX, OdliÄŤna ventilacija', link: bigBangSearch('Corsair 4000D Airflow'), url: bigBangSearch('Corsair 4000D Airflow'), image: '', category: 'Case', inStock: true, stock: 10, discount: 0, description: '', reason: 'Izvrsna cirkulacija' },
     ],
   };
 
   return fallbacks[category] || [];
 }
+
