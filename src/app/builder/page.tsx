@@ -4,17 +4,8 @@ import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-
-interface Component {
-  id: string
-  name: string
-  brand: string
-  price: number
-  specs: string
-  link: string
-  reason?: string
-  isAffordable?: boolean
-}
+import { Component } from './useProducts'
+import { ProductsLoader } from './ProductsLoader'
 
 interface SelectedComponents {
   cpu?: Component
@@ -26,77 +17,14 @@ interface SelectedComponents {
   case?: Component
 }
 
-// Komponente sa detaljnim opisima
-const cpuOptions: Component[] = [
-  { id: '1', name: 'Ryzen 5 5600', brand: 'AMD', price: 139, specs: '6C/12T, 4.4GHz', link: 'https://www.nabava.net', reason: 'Idealan za početni gaming - najbolji odnos cijene i performansi' },
-  { id: '2', name: 'Ryzen 7 7800X3D', brand: 'AMD', price: 439, specs: '8C/16T, 5.0GHz + 3D V-Cache', link: 'https://www.nabava.net', reason: 'Najbolji gaming procesor na tržištu - nenadmašne performanse u igrama' },
-  { id: '3', name: 'Ryzen 9 7950X', brand: 'AMD', price: 613, specs: '16C/32T, 5.7GHz', link: 'https://www.adm.hr', reason: 'Top performanse za gaming i kreativni rad' },
-  { id: '4', name: 'Ryzen 9 9950X', brand: 'AMD', price: 799, specs: '16C/32T, 5.7GHz Zen 5', link: 'https://www.ekupi.hr', reason: 'Najnovija generacija - najbolje za multitasking' },
-  { id: '5', name: 'Core i5-13400F', brand: 'Intel', price: 199, specs: '10C/16T, 4.6GHz', link: 'https://www.nabava.net', reason: 'Odlična mid-range opcija sa jakim performansama' },
-  { id: '6', name: 'Core i7-14700K', brand: 'Intel', price: 426, specs: '20C/28T, 5.6GHz', link: 'https://www.nabava.net', reason: 'High-end gaming i multitasking powerhouse' },
-  { id: '7', name: 'Core i9-14900K', brand: 'Intel', price: 666, specs: '24C/32T, 6.0GHz', link: 'https://www.adm.hr', reason: 'Ekstremne performanse za profesionalce' },
-  { id: '8', name: 'Core i9-14900KS', brand: 'Intel', price: 799, specs: '24C/32T, 6.2GHz Max Turbo', link: 'https://www.ekupi.hr', reason: 'Top tier - najbrži Intel procesor' },
-]
-
-const motherboardOptions: Component[] = [
-  { id: '1', name: 'B450 AORUS M', brand: 'Gigabyte', price: 79, specs: 'AMD AM4, DDR4', link: 'https://www.nabava.net/hr/racunala-komponente/maticne-ploce', reason: 'Budžet opcija sa osnovnim funkcijama' },
-  { id: '2', name: 'B550 GAMING PLUS', brand: 'MSI', price: 119, specs: 'AMD AM4, DDR4, PCIe 4.0', link: 'https://www.nabava.net/hr/racunala-komponente/maticne-ploce', reason: 'Odličan balans funkcija za gaming' },
-  { id: '3', name: 'B650 AORUS ELITE', brand: 'Gigabyte', price: 199, specs: 'AMD AM5, DDR5, PCIe 5.0', link: 'https://www.adm.hr/', reason: 'Moderna platforma sa podrškom za DDR5' },
-  { id: '4', name: 'X670E AORUS MASTER', brand: 'Gigabyte', price: 399, specs: 'AMD AM5, DDR5, Premium', link: 'https://www.adm.hr/', reason: 'Top funkcije i maksimalna proširivost' },
-  { id: '5', name: 'B760 GAMING X', brand: 'Gigabyte', price: 159, specs: 'Intel LGA1700, DDR5', link: 'https://www.nabava.net/', reason: 'Solidna mid-range opcija za Intel' },
-  { id: '6', name: 'Z790 AORUS MASTER', brand: 'Gigabyte', price: 449, specs: 'Intel LGA1700, Premium', link: 'https://www.nabava.net/', reason: 'Premium funkcije i overclocking potencijal' },
-]
-
-const gpuOptions: Component[] = [
-  { id: '1', name: 'RTX 3050', brand: 'NVIDIA', price: 259, specs: '8GB GDDR6', link: 'https://www.nabava.net', reason: 'Entry-level gaming na 1080p rezoluciji' },
-  { id: '2', name: 'RX 6600', brand: 'AMD', price: 219, specs: '8GB GDDR6', link: 'https://www.nabava.net', reason: 'Najbolja budžet opcija - odlična cijena/performanse' },
-  { id: '3', name: 'RTX 4060 Ti', brand: 'NVIDIA', price: 429, specs: '8GB GDDR6X + DLSS 3', link: 'https://www.nabava.net', reason: 'Savršena za 1440p gaming sa najnovijim tehnologijama' },
-  { id: '4', name: 'RX 7800 XT', brand: 'AMD', price: 573, specs: '16GB GDDR6', link: 'https://www.nabava.net', reason: 'Odličan 1440p gaming sa puno VRAM-a' },
-  { id: '5', name: 'RTX 4070', brand: 'NVIDIA', price: 666, specs: '12GB GDDR6X + Ray Tracing', link: 'https://www.nabava.net', reason: 'High-end 1440p i entry 4K gaming' },
-  { id: '6', name: 'RTX 4080', brand: 'NVIDIA', price: 1333, specs: '16GB GDDR6X', link: 'https://www.adm.hr', reason: 'Vrhunske 4K performanse' },
-  { id: '7', name: 'RX 7900 XTX', brand: 'AMD', price: 1066, specs: '24GB GDDR6', link: 'https://www.nabava.net', reason: 'Top 4K gaming sa ogromnom količinom memorije' },
-  { id: '8', name: 'RTX 4090', brand: 'NVIDIA', price: 1799, specs: '24GB GDDR6X - Flagship', link: 'https://www.ekupi.hr', reason: 'Najmoćniji igraći GPU - 4K ultra settings' },
-  { id: '9', name: 'RTX 5090', brand: 'NVIDIA', price: 2199, specs: '32GB GDDR7 - Latest Gen', link: 'https://www.adm.hr', reason: 'Vrhunska nova generacija - nenadmašne performanse' },
-]
-
-const ramOptions: Component[] = [
-  { id: '1', name: 'Corsair Vengeance 16GB', brand: 'Corsair', price: 53, specs: 'DDR4 3200MHz', link: 'https://www.nabava.net/hr/racunala-komponente/memorije-ram', reason: 'Minimum za gaming - pouzdana memorija' },
-  { id: '2', name: 'Kingston Fury 16GB', brand: 'Kingston', price: 59, specs: 'DDR4 3600MHz', link: 'https://www.nabava.net/', reason: 'Brža DDR4 opcija za bolje performanse' },
-  { id: '3', name: 'Corsair Vengeance 32GB', brand: 'Corsair', price: 119, specs: 'DDR5 6000MHz', link: 'https://www.nabava.net/hr/racunala-komponente/memorije-ram', reason: 'Moderna DDR5 za high-end sisteme' },
-  { id: '4', name: 'G.Skill Trident Z5 32GB', brand: 'G.Skill', price: 146, specs: 'DDR5 6400MHz + RGB', link: 'https://www.adm.hr/', reason: 'Premium memorija sa RGB osvetljenjem' },
-  { id: '5', name: 'Kingston Fury 64GB', brand: 'Kingston', price: 239, specs: 'DDR5 6000MHz', link: 'https://www.nabava.net/', reason: 'Za kreativni rad i teške aplikacije' },
-]
-
-const storageOptions: Component[] = [
-  { id: '1', name: 'Kingston NV2 500GB', brand: 'Kingston', price: 39, specs: 'NVMe Gen4, 3500MB/s', link: 'https://www.nabava.net/', reason: 'Budžet NVMe - dovoljan za OS i igre' },
-  { id: '2', name: 'WD Blue SN580 1TB', brand: 'WD', price: 66, specs: 'NVMe Gen4, 4150MB/s', link: 'https://www.nabava.net/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Solidan mid-range SSD sa dobrim performansama' },
-  { id: '3', name: 'Samsung 980 PRO 1TB', brand: 'Samsung', price: 106, specs: 'NVMe Gen4, 7000MB/s', link: 'https://www.nabava.net/hr/racunala-komponente/hard-diskovi-hdd-ssd', reason: 'Premium SSD sa vrhunskim brzinama' },
-  { id: '4', name: 'WD Black SN850X 2TB', brand: 'WD', price: 199, specs: 'NVMe Gen4, 7300MB/s', link: 'https://www.adm.hr/', reason: 'Top gaming SSD sa velikom količinom prostora' },
-  { id: '5', name: 'Crucial P5 Plus 2TB', brand: 'Crucial', price: 173, specs: 'NVMe Gen4, 6600MB/s', link: 'https://www.nabava.net/', reason: 'Odličan balans cijene i performansi za 2TB' },
-]
-
-const psuOptions: Component[] = [
-  { id: '1', name: 'Cooler Master 550W', brand: 'Cooler Master', price: 53, specs: '550W, 80+ Bronze', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Budžet napajanje za osnovne sisteme' },
-  { id: '2', name: 'Corsair CX650', brand: 'Corsair', price: 66, specs: '650W, 80+ Bronze', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Pouzdano napajanje za mid-range gaming' },
-  { id: '3', name: 'Seasonic Focus GX-750', brand: 'Seasonic', price: 106, specs: '750W, 80+ Gold', link: 'https://www.adm.hr/', reason: 'Kvalitetno napajanje sa Gold certifikatom' },
-  { id: '4', name: 'Corsair RM850x', brand: 'Corsair', price: 133, specs: '850W, 80+ Gold, Modularno', link: 'https://www.nabava.net/hr/racunala-komponente/napajanja-za-racunala', reason: 'Premium modularno napajanje za high-end sisteme' },
-  { id: '5', name: 'Seasonic Focus GX-1000', brand: 'Seasonic', price: 173, specs: '1000W, 80+ Gold', link: 'https://www.adm.hr/', reason: 'Za najzahtjevnije konfiguracije' },
-  { id: '6', name: 'be quiet! Straight Power 11', brand: 'be quiet!', price: 199, specs: '1000W, 80+ Platinum', link: 'https://www.nabava.net/', reason: 'Top tier napajanje - tiho i efikasno' },
-]
-
-const caseOptions: Component[] = [
-  { id: '1', name: 'Cooler Master Q300L', brand: 'Cooler Master', price: 46, specs: 'Micro-ATX', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Kompaktno budžet kućište' },
-  { id: '2', name: 'NZXT H510', brand: 'NZXT', price: 79, specs: 'ATX, Minimalistički dizajn', link: 'https://www.nabava.net/', reason: 'Čist dizajn i lako upravljanje kablovima' },
-  { id: '3', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, specs: 'ATX, Odlična ventilacija', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Izvrsna cirkulacija zraka - hladni sistem' },
-  { id: '4', name: 'NZXT H7 Flow', brand: 'NZXT', price: 133, specs: 'ATX, RGB osvetljenje', link: 'https://www.nabava.net/', reason: 'Premium izgled sa RGB detaljima' },
-  { id: '5', name: 'Lian Li O11 Dynamic', brand: 'Lian Li', price: 159, specs: 'ATX, Showcase dizajn', link: 'https://www.nabava.net/hr/racunala-komponente/kucista-za-racunala', reason: 'Za pokazivanje komponenti - potpuno staklo' },
-  { id: '6', name: 'Fractal Torrent', brand: 'Fractal', price: 199, specs: 'ATX, Maksimalna ventilacija', link: 'https://www.adm.hr/', reason: 'Najbolja cirkulacija na tržištu' },
-]
-
 export default function BuilderPage() {
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <BuilderContent />
+      <ProductsLoader categories={['cpu', 'gpu', 'ram', 'motherboard', 'storage', 'psu', 'case']}>
+        {({ products, loading, error }) => (
+          <BuilderContent products={products} productsError={error} />
+        )}
+      </ProductsLoader>
     </Suspense>
   )
 }
@@ -118,7 +46,10 @@ function LoadingScreen() {
   )
 }
 
-function BuilderContent() {
+function BuilderContent({ products, productsError }: {
+  products: Record<string, Component[]>;
+  productsError: string | null;
+}) {
   const [step, setStep] = useState(-1)
   const [selected, setSelected] = useState<SelectedComponents>({})
   const [isGenerating, setIsGenerating] = useState(false)
@@ -128,26 +59,7 @@ function BuilderContent() {
   const [buildMode, setBuildMode] = useState<'auto' | 'manual' | null>(null)
   const [isReplacing, setIsReplacing] = useState(false)
   const [shareLink, setShareLink] = useState<string>('')
-  const [availabilityLoading, setAvailabilityLoading] = useState<string | null>(null)
-  const [availability, setAvailability] = useState<Record<string, any>>({})
   const searchParams = useSearchParams()
-
-  // Provjeri dostupnost komponente
-  const checkAvailability = async (component: Component) => {
-    setAvailabilityLoading(component.id)
-    try {
-      const response = await fetch(`/api/check-availability?brand=${encodeURIComponent(component.brand)}&model=${encodeURIComponent(component.name)}`)
-      const data = await response.json()
-      setAvailability(prev => ({
-        ...prev,
-        [component.id]: data.results || []
-      }))
-    } catch (error) {
-      console.error('Greška pri provjeri dostupnosti:', error)
-    } finally {
-      setAvailabilityLoading(null)
-    }
-  }
 
   // Učitaj konfiguraciju iz URL-a
   useEffect(() => {
@@ -186,13 +98,13 @@ function BuilderContent() {
   ]
 
   const steps = [
-    { title: 'Odabrani Procesor', key: 'cpu', options: cpuOptions, icon: '🔲' },
-    { title: 'Odabrana Matična ploča', key: 'motherboard', options: motherboardOptions, icon: '🔌' },
-    { title: 'Odabrana Grafička', key: 'gpu', options: gpuOptions, icon: '🎮' },
-    { title: 'Odabrani RAM', key: 'ram', options: ramOptions, icon: '💾' },
-    { title: 'Odabrani Storage', key: 'storage', options: storageOptions, icon: '💿' },
-    { title: 'Odabrano Napajanje', key: 'psu', options: psuOptions, icon: '🔋' },
-    { title: 'Odabrano Kućište', key: 'case', options: caseOptions, icon: '📦' },
+    { title: 'Odabrani Procesor', key: 'cpu', options: products.cpu || [], icon: '🔲' },
+    { title: 'Odabrana Matična ploča', key: 'motherboard', options: products.motherboard || [], icon: '🔌' },
+    { title: 'Odabrana Grafička', key: 'gpu', options: products.gpu || [], icon: '🎮' },
+    { title: 'Odabrani RAM', key: 'ram', options: products.ram || [], icon: '💾' },
+    { title: 'Odabrani Storage', key: 'storage', options: products.storage || [], icon: '💿' },
+    { title: 'Odabrano Napajanje', key: 'psu', options: products.psu || [], icon: '🔋' },
+    { title: 'Odabrano Kućište', key: 'case', options: products.case || [], icon: '📦' },
   ]
 
   // Funkcija za automatski odabir najboljih komponenti po budžetu
@@ -235,13 +147,13 @@ function BuilderContent() {
     }
 
     return {
-      cpu: findBestComponent(cpuOptions, budgets.cpu),
-      motherboard: findBestComponent(motherboardOptions, budgets.motherboard),
-      gpu: findBestComponent(gpuOptions, budgets.gpu),
-      ram: findBestComponent(ramOptions, budgets.ram),
-      storage: findBestComponent(storageOptions, budgets.storage),
-      psu: findBestComponent(psuOptions, budgets.psu),
-      case: findBestComponent(caseOptions, budgets.case)
+      cpu: findBestComponent(products.cpu || [], budgets.cpu),
+      motherboard: findBestComponent(products.motherboard || [], budgets.motherboard),
+      gpu: findBestComponent(products.gpu || [], budgets.gpu),
+      ram: findBestComponent(products.ram || [], budgets.ram),
+      storage: findBestComponent(products.storage || [], budgets.storage),
+      psu: findBestComponent(products.psu || [], budgets.psu),
+      case: findBestComponent(products.case || [], budgets.case)
     }
   }
 
@@ -723,44 +635,18 @@ function BuilderContent() {
                       >
                         🔄 Zamijeni
                       </motion.button>
-                      <motion.button
+                      <motion.a
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => checkAvailability(component!)}
-                        disabled={availabilityLoading === component?.id}
-                        className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:opacity-50"
+                        href={component?.url || component?.link || 'https://www.bigbang.hr'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition inline-flex items-center gap-2"
                       >
-                        {availabilityLoading === component?.id ? '🔍 Pretražujem...' : '🔍 Gdje kupiti'}
-                      </motion.button>
+                        🛒 Kupi na Big Bang
+                      </motion.a>
                     </div>
                   </div>
-                  
-                  {/* Dostupnost komponente */}
-                  {availability[component?.id || ''] && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      className="mt-4 space-y-2 bg-green-900/20 border border-green-400/30 p-4 rounded-lg"
-                    >
-                      <h4 className="font-bold text-green-400 mb-3">💚 Dostupno na:</h4>
-                      {availability[component?.id || '']?.map((retailer: any, idx: number) => (
-                        <a
-                          key={idx}
-                          href={retailer.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center justify-between p-3 bg-gray-700/50 hover:bg-green-400/20 border border-green-400/20 hover:border-green-400 rounded-lg transition group"
-                        >
-                          <div>
-                            <p className="font-semibold text-gray-100 group-hover:text-green-300">{retailer.store}</p>
-                            {retailer.inStock && <p className="text-xs text-gray-400">Na zalihi: {retailer.inStock}</p>}
-                          </div>
-                          <span className="text-green-400 group-hover:translate-x-1 transition">→</span>
-                        </a>
-                      ))}
-                    </motion.div>
-                  )}
                 </div>
               </motion.div>
             ))}

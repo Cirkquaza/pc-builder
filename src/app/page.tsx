@@ -47,6 +47,9 @@ export default function Home() {
           <Link href="/builder" className="btn-primary bg-cyan-400 text-gray-900 hover:bg-cyan-300 transform hover:scale-105">
             Počni gradnju
           </Link>
+          <Link href="/shop" className="btn-primary bg-green-400 text-gray-900 hover:bg-green-300 transform hover:scale-105">
+            Online kupovina
+          </Link>
           <Link href="/info" className="btn-secondary bg-blue-900 hover:bg-blue-800 text-white border-2 border-cyan-400/50">
             Saznaj više
           </Link>
