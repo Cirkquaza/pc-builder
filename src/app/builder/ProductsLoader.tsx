@@ -127,7 +127,7 @@ function generateReason(product: any, category: string): string {
   return 'Premium - vrhunska klasa';
 }
 
-const bigBangSearch = (name: string) => `https://www.bigbang.hr/search?q=${encodeURIComponent(name)}`;
+const bigBangSearch = (name: string) => `https://www.bigbang.hr/proizvodi?q=${encodeURIComponent(name)}`;
 
 function getFallbackProducts(category: string): Component[] {
   const fallbacks: Record<string, Component[]> = {
