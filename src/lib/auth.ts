@@ -35,7 +35,15 @@ const config: NextAuthConfig = {
             return null;
           }
 
-          const passwordMatch = await bcrypt.default.compare(
+          const compare =
+            bcrypt.compare ?? (bcrypt.default && bcrypt.default.compare);
+
+          if (!compare) {
+            console.error("Auth error: bcrypt compare not available");
+            return null;
+          }
+
+          const passwordMatch = await compare(
             credentials.password as string,
             user.password
           );
@@ -59,6 +67,7 @@ const config: NextAuthConfig = {
   ],
   pages: {
     signIn: "/auth/login",
+    error: "/auth/login",
   },
   callbacks: {
     async jwt({ token, user }: any) {
