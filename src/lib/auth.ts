@@ -15,7 +15,18 @@ const config = (request?: NextRequest): NextAuthConfig => {
   return {
     secret: authSecret,
     trustHost: true,
-    debug: process.env.NODE_ENV === "development",
+    debug: true,
+    logger: {
+      error(error: Error) {
+        console.error("NextAuth error:", error);
+      },
+      warn(code: string) {
+        console.warn("NextAuth warn:", code);
+      },
+      debug(code: string, metadata?: unknown) {
+        console.debug("NextAuth debug:", code, metadata);
+      },
+    } as any,
     providers: [
     Credentials({
       name: "Credentials",
