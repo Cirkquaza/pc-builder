@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 import crypto from "crypto";
 
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     if (!process.env.RESEND_API_KEY) {
