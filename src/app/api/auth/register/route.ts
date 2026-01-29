@@ -40,7 +40,17 @@ export async function POST(req: NextRequest) {
     }
 
     // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashFn = bcrypt.hash ?? (bcrypt.default && bcrypt.default.hash);
+    
+    if (!hashFn) {
+      console.error("bcrypt.hash not available");
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    const hashedPassword = await hashFn(password, 10);
 
     // Create user
     const user = await prisma.user.create({
@@ -58,8 +68,10 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Registration error:", error);
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error details:", errorMessage);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: errorMessage },
       { status: 500 }
     );
   }
