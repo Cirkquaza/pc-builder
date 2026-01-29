@@ -49,8 +49,10 @@ export default function RegisterPage() {
         return;
       }
 
-      // Redirect to login
-      router.push("/auth/login?registered=true");
+      // Show success message and redirect to login
+      setError("");
+      alert("Registracija uspješna! Provjeri email za verifikacijski link.");
+      router.push("/auth/login");
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);

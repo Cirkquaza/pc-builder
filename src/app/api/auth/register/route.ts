@@ -52,18 +52,55 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await hashFn(password, 10);
 
-    // Create user
+    // Create user (not verified yet)
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
-        emailVerified: new Date(),
+        emailVerified: null,
       },
     });
 
+    // Generate verification token
+    const crypto = await import("crypto");
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+    await prisma.verificationToken.create({
+      data: {
+        identifier: email,
+        token,
+        expires,
+      },
+    });
+
+    // Send verification email
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const { Resend } = await import("resend");
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const verifyUrl = `${process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://pc-builder-delta.vercel.app"}/auth/verify?token=${token}`;
+
+        await resend.emails.send({
+          from: "PC Builder <onboarding@resend.dev>",
+          to: email,
+          subject: "Potvrdi svoj email",
+          html: `
+            <h2>Dobrodošao u PC Builder!</h2>
+            <p>Hvala što si se registrovao. Klikni na link ispod da potvrdiš svoj email:</p>
+            <a href="${verifyUrl}">Potvrdi email</a>
+            <p>Link je valjan 24 sata.</p>
+            <p>Ako nisi tražio ovaj email, ignoriši ga.</p>
+          `,
+        });
+      } catch (emailError) {
+        console.error("Email send error:", emailError);
+      }
+    }
+
     return NextResponse.json(
-      { message: "User created successfully", userId: user.id },
+      { message: "Registration successful. Check your email to verify your account.", userId: user.id },
       { status: 201 }
     );
   } catch (error) {

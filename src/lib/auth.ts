@@ -54,6 +54,12 @@ const config = (request?: NextRequest): NextAuthConfig => {
             return null;
           }
 
+          // Check if email is verified
+          if (!user.emailVerified) {
+            console.error("Email not verified");
+            return null;
+          }
+
           const compare =
             bcrypt.compare ?? (bcrypt.default && bcrypt.default.compare);
 

@@ -31,7 +31,7 @@ export default function LoginPage() {
 
       if (result?.error) {
         if (result.error === "CredentialsSignin") {
-          setError("Korisnik ne postoji ili lozinka nije točna.");
+          setError("Korisnik ne postoji, lozinka nije točna, ili email nije verificiran.");
         } else if (result.error === "Configuration") {
           setError("Greška konfiguracije. Pokušaj kasnije.");
         } else {
