@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Send, Star, Trash2 } from "lucide-react";
 
 interface TicketDetail {
   id: string;
@@ -18,6 +18,7 @@ interface Message {
   id: string;
   content: string;
   author: string;
+  userId: string;
   createdAt: string;
   likes: number;
   dislikes: number;
@@ -136,6 +137,30 @@ export default function TicketDetailPage({
     }
   };
 
+  const handleDeleteComment = async (messageId: string) => {
+    if (!confirm("Da li si siguran da želiš obrisati ovaj komentar?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/forum/tickets/${params.id}/messages/${messageId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        fetchTicket();
+      } else {
+        alert("Greška pri brisanju komentara");
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      alert("Greška pri brisanju komentara");
+    }
+  };
+
   if (!ticket) {
     return (
       <div className="text-center text-white py-12">
@@ -189,6 +214,15 @@ export default function TicketDetailPage({
                       {new Date(msg.createdAt).toLocaleDateString("sr-RS")}
                     </p>
                   </div>
+                  {session?.user && (
+                    <button
+                      onClick={() => handleDeleteComment(msg.id)}
+                      className="text-red-400 hover:text-red-300 p-2 rounded hover:bg-red-500/10"
+                      title="Obriši komentar"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
                 <p className="text-gray-200 mb-4">{msg.content}</p>
 

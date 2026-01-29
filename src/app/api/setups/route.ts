@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
 
     const formattedSetups = setups.map((setup) => ({
       id: setup.id,
+      userId: setup.userId,
       title: setup.title,
       description: setup.description,
       image: setup.image,

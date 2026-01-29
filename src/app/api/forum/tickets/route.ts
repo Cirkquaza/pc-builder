@@ -10,6 +10,7 @@ export async function GET() {
     const tickets = await prisma.ticket.findMany({
       select: {
         id: true,
+        userId: true,
         title: true,
         description: true,
         createdAt: true,
@@ -29,6 +30,7 @@ export async function GET() {
 
     const formattedTickets = tickets.map((ticket) => ({
       id: ticket.id,
+      userId: ticket.userId,
       title: ticket.title,
       description: ticket.description,
       author: ticket.user?.name || "Anoniman",
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
     const { auth } = await import("@/lib/auth");
     const session = await auth();
 
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json(
         { error: "Morate biti prijavljeni" },
         { status: 401 }
@@ -69,15 +71,40 @@ export async function POST(req: NextRequest) {
 
     const { prisma } = await import("@/lib/prisma");
 
+    // Find user by email
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Korisnik nije pronađen" },
+        { status: 404 }
+      );
+    }
+
     const ticket = await prisma.ticket.create({
       data: {
         title,
         description,
-        userId: session.user.id,
+        userId: user.id,
+      },
+      include: {
+        user: { select: { name: true } },
       },
     });
 
-    return NextResponse.json(ticket, { status: 201 });
+    return NextResponse.json(
+      {
+        id: ticket.id,
+        title: ticket.title,
+        description: ticket.description,
+        author: ticket.user?.name || "Anoniman",
+        createdAt: ticket.createdAt,
+        message: "Ticket je uspješno kreiram",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Error creating ticket:", error);
     return NextResponse.json(

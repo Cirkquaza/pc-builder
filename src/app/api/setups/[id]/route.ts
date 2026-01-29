@@ -43,6 +43,7 @@ export async function GET(
       dislikes: setup.dislikes,
       comments: setup.comments.map((comment) => ({
         id: comment.id,
+        userId: comment.userId,
         text: comment.text,
         author: comment.user?.name || "Anoniman",
         createdAt: comment.createdAt,

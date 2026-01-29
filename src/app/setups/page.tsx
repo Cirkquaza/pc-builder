@@ -3,10 +3,11 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Upload, X } from "lucide-react";
+import { Upload, X, Trash2 } from "lucide-react";
 
 interface Setup {
   id: string;
+  userId: string;
   title: string;
   description?: string;
   image: string;
@@ -114,6 +115,29 @@ export default function SetupsPage() {
       alert("Greška pri objavljivanju");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteSetup = async (e: React.MouseEvent, setupId: string) => {
+    e.stopPropagation();
+
+    if (!confirm("Da li si siguran da želiš obrisati ovaj setup?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/setups/${setupId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        fetchSetups();
+      } else {
+        alert("Greška pri brisanju setupa");
+      }
+    } catch (error) {
+      console.error("Error deleting setup:", error);
+      alert("Greška pri brisanju setupa");
     }
   };
 
@@ -245,11 +269,10 @@ export default function SetupsPage() {
           {setups.length === 0 ? "Nema objavljenih setupa" : "Svi Setups"}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {setups.map((setup) => (
             <div
               key={setup.id}
               onClick={() => router.push(`/setups/${setup.id}`)}
-              className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden hover:border-blue-500 transition cursor-pointer"
+              className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden hover:border-blue-500 transition cursor-pointer relative group"
             >
               {/* Image */}
               <img
@@ -257,6 +280,17 @@ export default function SetupsPage() {
                 alt={setup.title}
                 className="w-full h-48 object-cover"
               />
+
+              {/* Delete Button */}
+              {session?.user && (
+                <button
+                  onClick={(e) => handleDeleteSetup(e, setup.id)}
+                  className="absolute top-2 right-2 text-red-400 hover:text-red-300 bg-black/70 p-2 rounded opacity-0 group-hover:opacity-100 transition"
+                  title="Obriši setup"
+                >
+                  <Trash2 size={18} />
+                </button>
+              )}
 
               {/* Content */}
               <div className="p-4 space-y-3">
@@ -284,7 +318,6 @@ export default function SetupsPage() {
                 </div>
               </div>
             </div>
-          ))}
         </div>
       </div>
     </div>

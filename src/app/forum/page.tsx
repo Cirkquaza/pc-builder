@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { MessageSquare, ThumbsUp, ThumbsDown } from "lucide-react";
+import { MessageSquare, ThumbsUp, ThumbsDown, X, Trash2 } from "lucide-react";
 
 interface Ticket {
   id: string;
@@ -14,6 +14,7 @@ interface Ticket {
   createdAt: string;
   comments: number;
   likes: number;
+  userId: string;
 }
 
 export default function ForumPage() {
@@ -65,6 +66,30 @@ export default function ForumPage() {
       console.error("Error creating ticket:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDeleteTicket = async (e: React.MouseEvent, ticketId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!confirm("Da li si siguran da želiš obrisati ovaj ticket?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/forum/tickets/${ticketId}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        fetchTickets();
+      } else {
+        alert("Greška pri brisanju ticketa");
+      }
+    } catch (error) {
+      console.error("Error deleting ticket:", error);
+      alert("Greška pri brisanju ticketa");
     }
   };
 
@@ -157,7 +182,7 @@ export default function ForumPage() {
             <Link
               key={ticket.id}
               href={`/forum/ticket/${ticket.id}`}
-              className="block bg-slate-800 border border-slate-700 rounded-lg p-6 hover:border-blue-500/50 transition hover:shadow-lg"
+              className="block bg-slate-800 border border-slate-700 rounded-lg p-6 hover:border-blue-500/50 transition hover:shadow-lg relative group"
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
@@ -172,15 +197,26 @@ export default function ForumPage() {
                     <span>{new Date(ticket.createdAt).toLocaleDateString("sr-RS")}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 ml-4 text-slate-400">
-                  <div className="flex items-center gap-1">
-                    <MessageSquare size={18} />
-                    <span>{ticket.comments}</span>
+                <div className="flex items-center gap-4 ml-4">
+                  <div className="flex items-center gap-4 text-slate-400">
+                    <div className="flex items-center gap-1">
+                      <MessageSquare size={18} />
+                      <span>{ticket.comments}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <ThumbsUp size={18} />
+                      <span>{ticket.likes}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <ThumbsUp size={18} />
-                    <span>{ticket.likes}</span>
-                  </div>
+                  {session?.user && (
+                    <button
+                      onClick={(e) => handleDeleteTicket(e, ticket.id)}
+                      className="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition p-2 rounded hover:bg-red-500/10"
+                      title="Obriši ticket"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
               </div>
             </Link>

@@ -3,12 +3,13 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Send, Star, Trash2 } from "lucide-react";
 
 interface SetupComment {
   id: string;
   text: string;
   author: string;
+  userId: string;
   createdAt: string;
   likes: number;
   dislikes: number;
@@ -144,6 +145,30 @@ export default function SetupDetailPage({
     }
   };
 
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm("Da li si siguran da želiš obrisati ovaj komentar?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/setups/${params.id}/comments/${commentId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        fetchSetup();
+      } else {
+        alert("Greška pri brisanju komentara");
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      alert("Greška pri brisanju komentara");
+    }
+  };
+
   if (isLoading) {
     return <div className="text-center text-white py-12">Učitavanje...</div>;
   }
@@ -201,6 +226,15 @@ export default function SetupDetailPage({
                       {new Date(comment.createdAt).toLocaleDateString("sr-RS")}
                     </p>
                   </div>
+                  {session?.user && (
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="text-red-400 hover:text-red-300 p-2 rounded hover:bg-red-500/10"
+                      title="Obriši komentar"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
                 </div>
 
                 <p className="text-gray-200 mb-4">{comment.text}</p>
