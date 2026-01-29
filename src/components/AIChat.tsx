@@ -51,7 +51,7 @@ export default function AIChat() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.reply) {
         const assistantMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant" as const,
@@ -59,14 +59,16 @@ export default function AIChat() {
         };
         setMessages((prev) => [...prev, assistantMessage]);
       } else {
+        console.error("API error:", data);
         const errorMessage = {
           id: (Date.now() + 1).toString(),
           role: "assistant" as const,
-          content: "Izvinjavam se, došlo je do greške. Pokušaj ponovo.",
+          content: data.error || "Izvinjavam se, došlo je do greške. Pokušaj ponovo.",
         };
         setMessages((prev) => [...prev, errorMessage]);
       }
     } catch (error) {
+      console.error("Chat error:", error);
       const errorMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant" as const,
