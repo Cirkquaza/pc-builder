@@ -3,6 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 
 const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+const authUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL;
 
 const config: NextAuthConfig = {
   secret: authSecret,
@@ -66,8 +67,8 @@ const config: NextAuthConfig = {
     }),
   ],
   pages: {
-    signIn: "/auth/login",
-    error: "/auth/login",
+    signIn: authUrl ? `${authUrl}/auth/login` : "/auth/login",
+    error: authUrl ? `${authUrl}/auth/login` : "/auth/login",
   },
   callbacks: {
     async jwt({ token, user }: any) {
