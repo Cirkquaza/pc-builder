@@ -57,23 +57,21 @@ export default function Home() {
       </section>
 
       {/* Video Tutorial sekcija */}
-      <section className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 rounded-2xl p-12 shadow-lg border border-slate-700/50">
+      <section className="bg-gradient-to-br from-purple-900 via-purple-800 to-purple-950 rounded-2xl p-12 shadow-lg border border-purple-400/30">
         <h2 className="text-4xl font-bold text-center mb-8 text-white">
           🎓 Pomoć pri sklapanju PC-a
         </h2>
         <div className="flex justify-center">
-          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-2xl p-1 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800">
-            <div className="w-full h-full bg-slate-900 rounded-[10px] overflow-hidden">
-              <iframe
-                width="100%"
-                height="100%"
-                src="https://www.youtube.com/embed/qkr07CutHrU"
-                title="Kako sklopiti računar - Vodič za početnike"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+          <div className="w-full max-w-2xl aspect-video rounded-xl overflow-hidden shadow-2xl border-2 border-purple-400/50">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/qkr07CutHrU"
+              title="Kako sklopiti računar - Vodič za početnike"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
         <p className="text-center text-gray-300 mt-6">
