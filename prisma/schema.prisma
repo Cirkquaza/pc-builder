@@ -27,6 +27,8 @@ model User {
   resetTokens           ResetToken[]
   tickets               Ticket[]
   messages              Message[]
+  setups                Setup[]
+  setupComments         SetupComment[]
 
   @@map("users")
 }
@@ -113,4 +115,39 @@ model Message {
   updatedAt DateTime  @updatedAt
 
   @@map("messages")
+}
+
+// PC Setups Gallery
+model Setup {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  image       String    // Base64 or URL to setup image
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments    SetupComment[]
+  rating      Float     @default(0) // Average rating
+  likes       Int       @default(0)
+  dislikes    Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("setups")
+}
+
+// Setup Comments
+model SetupComment {
+  id        String    @id @default(cuid())
+  text      String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  setupId   String
+  setup     Setup     @relation(fields: [setupId], references: [id], onDelete: Cascade)
+  likes     Int       @default(0)
+  dislikes  Int       @default(0)
+  rating    Float?    @default(0) // Individual rating 0-10
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("setup_comments")
 }

@@ -43,6 +43,16 @@ export default function Navigation() {
               >
                 Informacije
               </Link>
+              <Link 
+                href="/setups"
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  isActive('/setups') 
+                    ? 'bg-cyan-400 text-gray-900' 
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                Setups
+              </Link>
               {status === 'authenticated' && (
                 <>
                   <Link 
@@ -54,6 +64,16 @@ export default function Navigation() {
                     }`}
                   >
                     Forum
+                  </Link>
+                  <Link 
+                    href="/setups"
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      isActive('/setups') 
+                        ? 'bg-cyan-400 text-gray-900' 
+                        : 'text-gray-300 hover:bg-gray-800'
+                    }`}
+                  >
+                    Setups
                   </Link>
                   <Link 
                     href="/profile"
