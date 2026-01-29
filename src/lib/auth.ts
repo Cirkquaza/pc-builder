@@ -2,9 +2,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
 
+const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
+
 const config: NextAuthConfig = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: authSecret,
   trustHost: true,
+  debug: process.env.NODE_ENV === "development",
   providers: [
     Credentials({
       name: "Credentials",
