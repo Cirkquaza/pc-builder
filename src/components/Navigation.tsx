@@ -43,6 +43,18 @@ export default function Navigation() {
               >
                 Informacije
               </Link>
+              {status === 'authenticated' && (
+                <Link 
+                  href="/forum"
+                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                    isActive('/forum') 
+                      ? 'bg-cyan-400 text-gray-900' 
+                      : 'text-gray-300 hover:bg-gray-800'
+                  }`}
+                >
+                  Forum
+                </Link>
+              )}
             </div>
 
             <div className="flex items-center gap-2">

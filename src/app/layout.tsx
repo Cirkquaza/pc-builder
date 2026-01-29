@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Providers from '@/components/Providers'
+import AIChat from '@/components/AIChat'
 
 export const metadata: Metadata = {
   title: 'PC Builder - Sastavi svoj računar',
@@ -21,6 +22,7 @@ export default function RootLayout({
           <main className="container mx-auto px-4 py-8">
             {children}
           </main>
+          <AIChat />
           <footer className="bg-gray-950 border-t border-yellow-500/20 text-gray-300 py-8 mt-16">
             <div className="container mx-auto px-4 text-center">
               <p>&copy; 2026 PC Builder. Sva prava zadržana.</p>
