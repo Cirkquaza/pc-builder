@@ -1,15 +1,22 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthConfig } from "next-auth";
+import type { NextRequest } from "next/server";
 
 const authSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET;
 const authUrl = process.env.AUTH_URL ?? process.env.NEXTAUTH_URL;
 
-const config: NextAuthConfig = {
-  secret: authSecret,
-  trustHost: true,
-  debug: process.env.NODE_ENV === "development",
-  providers: [
+const config = (request?: NextRequest): NextAuthConfig => {
+  const host =
+    request?.headers.get("x-forwarded-host") ?? request?.headers.get("host");
+  const proto = request?.headers.get("x-forwarded-proto") ?? "https";
+  const baseUrl = authUrl ?? (host ? `${proto}://${host}` : undefined);
+
+  return {
+    secret: authSecret,
+    trustHost: true,
+    debug: process.env.NODE_ENV === "development",
+    providers: [
     Credentials({
       name: "Credentials",
       credentials: {
@@ -66,11 +73,16 @@ const config: NextAuthConfig = {
       },
     }),
   ],
-  pages: {
-    signIn: authUrl ? `${authUrl}/auth/login` : "/auth/login",
-    error: authUrl ? `${authUrl}/auth/login` : "/auth/login",
-  },
-  callbacks: {
+    pages: baseUrl
+      ? {
+          signIn: `${baseUrl}/auth/login`,
+          error: `${baseUrl}/auth/login`,
+        }
+      : {
+          signIn: "/auth/login",
+          error: "/auth/login",
+        },
+    callbacks: {
     async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
@@ -84,9 +96,10 @@ const config: NextAuthConfig = {
       return session;
     },
   },
-  session: {
-    strategy: "jwt",
-  },
+    session: {
+      strategy: "jwt",
+    },
+  };
 };
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);
