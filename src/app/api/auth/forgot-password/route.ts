@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     const resetLink = `${process.env.NEXTAUTH_URL}/auth/reset-password?token=${resetToken}&email=${email}`;
 
     await resend.emails.send({
-      from: "noreply@pc-builder.com",
+      from: "onboarding@resend.dev",
       to: email,
       subject: "Reset Your PC Builder Password",
       html: `
