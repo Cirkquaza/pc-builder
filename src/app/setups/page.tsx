@@ -269,6 +269,7 @@ export default function SetupsPage() {
           {setups.length === 0 ? "Nema objavljenih setupa" : "Svi Setups"}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {setups.map((setup) => (
             <div
               key={setup.id}
               onClick={() => router.push(`/setups/${setup.id}`)}
@@ -318,6 +319,7 @@ export default function SetupsPage() {
                 </div>
               </div>
             </div>
+          ))}
         </div>
       </div>
     </div>
