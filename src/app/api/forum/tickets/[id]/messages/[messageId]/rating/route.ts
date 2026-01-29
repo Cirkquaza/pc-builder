@@ -1,0 +1,41 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { id: string; messageId: string } }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: "Potrebna je prijava" }, { status: 401 });
+    }
+
+    const { rating } = await req.json(); // 0.0 to 10.0
+
+    if (typeof rating !== "number" || rating < 0 || rating > 10) {
+      return NextResponse.json(
+        { error: "Rejting mora biti između 0 i 10" },
+        { status: 400 }
+      );
+    }
+
+    const { prisma } = await import("@/lib/prisma");
+
+    const updatedMessage = await prisma.message.update({
+      where: { id: params.messageId },
+      data: { rating },
+    });
+
+    return NextResponse.json({ rating: updatedMessage.rating });
+  } catch (error) {
+    console.error("Error rating message:", error);
+    return NextResponse.json(
+      { error: "Greška pri postavljanju rejtinga" },
+      { status: 500 }
+    );
+  }
+}

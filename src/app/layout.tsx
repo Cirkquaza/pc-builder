@@ -16,6 +16,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="sr">
+      <head>
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+      </head>
       <body className="min-h-screen bg-gray-950">
         <Providers>
           <Navigation />

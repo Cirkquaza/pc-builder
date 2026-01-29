@@ -49,8 +49,10 @@ export async function GET(
         content: msg.text,
         author: msg.user?.name || "Anoniman",
         createdAt: msg.createdAt,
-        likes: 0,
-        dislikes: 0,
+        likes: msg.likes,
+        dislikes: msg.dislikes,
+        rating: msg.rating,
+        setupImage: msg.setupImage,
       })),
     };
 

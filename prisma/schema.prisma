@@ -17,6 +17,7 @@ model User {
   password              String?
   name                  String?
   image                 String?
+  setupImage            String?   // User's PC setup image
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
@@ -104,7 +105,12 @@ model Message {
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   ticketId  String
   ticket    Ticket    @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  likes     Int       @default(0)
+  dislikes  Int       @default(0)
+  setupImage String?   // URL to user's setup image
+  rating    Float?    @default(0) // 0.0 to 10.0 rating
   createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("messages")
 }

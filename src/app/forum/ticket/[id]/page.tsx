@@ -3,7 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { ThumbsUp, ThumbsDown, Send } from "lucide-react";
+import { ThumbsUp, ThumbsDown, Send, Star } from "lucide-react";
 
 interface TicketDetail {
   id: string;
@@ -21,6 +21,8 @@ interface Message {
   createdAt: string;
   likes: number;
   dislikes: number;
+  rating?: number;
+  setupImage?: string;
 }
 
 export default function TicketDetailPage({
@@ -33,6 +35,7 @@ export default function TicketDetailPage({
   const [ticket, setTicket] = useState<TicketDetail | null>(null);
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -76,6 +79,63 @@ export default function TicketDetailPage({
     }
   };
 
+  const handleLike = async (messageId: string) => {
+    try {
+      const response = await fetch(
+        `/api/forum/tickets/${params.id}/messages/${messageId}/like`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "like" }),
+        }
+      );
+
+      if (response.ok) {
+        fetchTicket();
+      }
+    } catch (error) {
+      console.error("Error liking:", error);
+    }
+  };
+
+  const handleDislike = async (messageId: string) => {
+    try {
+      const response = await fetch(
+        `/api/forum/tickets/${params.id}/messages/${messageId}/like`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ type: "dislike" }),
+        }
+      );
+
+      if (response.ok) {
+        fetchTicket();
+      }
+    } catch (error) {
+      console.error("Error disliking:", error);
+    }
+  };
+
+  const handleRating = async (messageId: string, rating: number) => {
+    try {
+      const response = await fetch(
+        `/api/forum/tickets/${params.id}/messages/${messageId}/rating`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rating }),
+        }
+      );
+
+      if (response.ok) {
+        fetchTicket();
+      }
+    } catch (error) {
+      console.error("Error rating:", error);
+    }
+  };
+
   if (!ticket) {
     return (
       <div className="text-center text-white py-12">
@@ -115,6 +175,13 @@ export default function TicketDetailPage({
                 key={msg.id}
                 className="bg-slate-800 border border-slate-700 rounded-lg p-6"
               >
+                {msg.setupImage && (
+                  <img
+                    src={msg.setupImage}
+                    alt="Setup"
+                    className="w-full max-h-64 object-cover rounded-lg mb-4"
+                  />
+                )}
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <p className="text-white font-semibold">{msg.author}</p>
@@ -124,12 +191,57 @@ export default function TicketDetailPage({
                   </div>
                 </div>
                 <p className="text-gray-200 mb-4">{msg.content}</p>
+
+                {/* Rating Stars */}
+                <div className="mb-4 flex items-center gap-2">
+                  <div className="flex gap-1">
+                    {[...Array(10)].map((_, i) => {
+                      const starValue = (i + 1) * 1.0;
+                      const displayValue = Math.round(msg.rating ?? 0 * 2) / 2;
+                      const isFilled = starValue <= displayValue;
+                      const isHalf =
+                        starValue - 0.5 === displayValue && displayValue % 1 === 0.5;
+
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => handleRating(msg.id, starValue)}
+                          onMouseEnter={() => setHoveredRating(starValue)}
+                          onMouseLeave={() => setHoveredRating(null)}
+                          className="transition-transform hover:scale-125"
+                        >
+                          <Star
+                            size={20}
+                            className={`${
+                              hoveredRating && starValue <= hoveredRating
+                                ? "fill-yellow-400 text-yellow-400"
+                                : isFilled
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-gray-500"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <span className="text-sm text-gray-400">
+                    {(msg.rating ?? 0).toFixed(1)}/10.0
+                  </span>
+                </div>
+
+                {/* Like/Dislike Buttons */}
                 <div className="flex items-center gap-4">
-                  <button className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition">
+                  <button
+                    onClick={() => handleLike(msg.id)}
+                    className="flex items-center gap-2 text-gray-400 hover:text-green-400 transition animate-pulse hover:animate-none"
+                  >
                     <ThumbsUp size={18} />
                     <span className="text-sm">{msg.likes}</span>
                   </button>
-                  <button className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition">
+                  <button
+                    onClick={() => handleDislike(msg.id)}
+                    className="flex items-center gap-2 text-gray-400 hover:text-red-400 transition animate-pulse hover:animate-none"
+                  >
                     <ThumbsDown size={18} />
                     <span className="text-sm">{msg.dislikes}</span>
                   </button>
