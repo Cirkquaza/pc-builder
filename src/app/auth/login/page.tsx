@@ -18,6 +18,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
+      if (!email || !password) {
+        setError("Unesi email i lozinku.");
+        return;
+      }
+
       const result = await signIn("credentials", {
         email,
         password,
@@ -25,13 +30,19 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError(result.error);
+        if (result.error === "CredentialsSignin") {
+          setError("Korisnik ne postoji ili lozinka nije točna.");
+        } else if (result.error === "Configuration") {
+          setError("Greška konfiguracije. Pokušaj kasnije.");
+        } else {
+          setError("Prijava nije uspjela. Pokušaj ponovo.");
+        }
       } else if (result?.ok) {
         router.push("/");
         router.refresh();
       }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError("Došlo je do greške. Pokušaj ponovo.");
     } finally {
       setIsLoading(false);
     }
