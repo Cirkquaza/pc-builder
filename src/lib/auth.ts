@@ -51,13 +51,13 @@ const config = (request?: NextRequest): NextAuthConfig => {
           });
 
           if (!user || !user.password) {
+            console.error("Auth: User not found or no password");
             return null;
           }
 
-          // Check if email is verified
+          // Check if email is verified - allow login anyway but log it
           if (!user.emailVerified) {
-            console.error("Email not verified");
-            return null;
+            console.warn("Auth: User email not verified, but allowing login:", user.email);
           }
 
           const compare =
@@ -74,6 +74,7 @@ const config = (request?: NextRequest): NextAuthConfig => {
           );
 
           if (!passwordMatch) {
+            console.error("Auth: Password mismatch for user:", user.email);
             return null;
           }
 
