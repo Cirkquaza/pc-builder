@@ -40,28 +40,21 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const category = searchParams.get('category') || 'cpu';
   const limit = parseInt(searchParams.get('limit') || '10');
-  const minPrice = searchParams.get('minPrice');
-  const maxPrice = searchParams.get('maxPrice');
 
   const categoryId = CATEGORY_MAP[category];
 
+  if (!categoryId) {
+    return NextResponse.json(
+      { error: 'Unknown category', category },
+      { status: 400 }
+    );
+  }
+
   try {
-    // Payload za BigBang API - simplified
-    const payload: any = {
-      category_id: categoryId || '',
-      limit,
-      response_fields: [
-        'id',
-        'title',
-        'basic_price_custom',
-        'discount_percent_custom',
-        'url_without_domain',
-        'main_image_upload_path',
-        'manufacturer_title',
-        'category_title',
-        'available_qty',
-        'short_description',
-      ],
+    // Probaj sa direktnim requestom - bez response_fields
+    const payload = {
+      category_id: parseInt(categoryId),
+      limit: Math.min(limit, 50),
     };
 
     const response = await fetch(
@@ -70,32 +63,48 @@ export async function GET(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Referer': 'https://www.bigbang.hr/',
         },
         body: JSON.stringify(payload),
       }
     );
 
+    // Log za debug
     if (!response.ok) {
-      console.error('BigBang API response:', await response.text());
-      throw new Error(`BigBang API error: ${response.status}`);
+      const text = await response.text();
+      console.error(`BigBang API error ${response.status}:`, text.substring(0, 200));
     }
 
-    const data: BigBangResponse = await response.json();
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
 
-    // Formatiraj proizvode za PC Builder
-    const products = data.data.items.map((item) => ({
-      id: item.id,
-      name: item.title,
-      price: item.basic_price_custom,
-      discount: item.discount_percent_custom || 0,
-      finalPrice: item.basic_price_custom * (1 - (item.discount_percent_custom || 0) / 100),
-      url: `https://www.bigbang.hr${item.url_without_domain}`,
-      image: `https://www.bigbang.hr${item.main_image_upload_path}`,
-      brand: item.manufacturer_title,
-      category: item.category_title,
-      inStock: item.available_qty > 0,
-      stock: item.available_qty,
+    const data = await response.json();
+
+    if (!data.data?.items || data.data.items.length === 0) {
+      throw new Error('No items returned');
+    }
+
+    // Formatiraj proizvode
+    const products = data.data.items.map((item: any) => ({
+      id: item.id || Math.random().toString(),
+      name: item.title || 'Unknown',
+      price: parseFloat(item.basic_price_custom) || 0,
+      discount: parseFloat(item.discount_percent_custom) || 0,
+      finalPrice:
+        parseFloat(item.basic_price_custom) *
+        (1 - (parseFloat(item.discount_percent_custom) || 0) / 100),
+      url: item.url_without_domain
+        ? `https://www.bigbang.hr${item.url_without_domain}`
+        : 'https://www.bigbang.hr',
+      image: item.main_image_upload_path
+        ? `https://www.bigbang.hr${item.main_image_upload_path}`
+        : '',
+      brand: item.manufacturer_title || 'Unknown',
+      category: item.category_title || category,
+      inStock: (item.available_qty || 0) > 0,
+      stock: item.available_qty || 0,
       description: item.short_description || '',
     }));
 
@@ -105,15 +114,14 @@ export async function GET(request: NextRequest) {
       count: products.length,
       products,
     });
-
   } catch (error) {
-    console.error('Error fetching products:', error);
-    return NextResponse.json(
-      { 
-        error: 'Failed to fetch products',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
+    console.error(`[${category}] Error:`, error);
+    // Vrati prazan niz umjesto greške, client će koristiti fallback
+    return NextResponse.json({
+      success: false,
+      category,
+      count: 0,
+      products: [],
+    });
   }
 }

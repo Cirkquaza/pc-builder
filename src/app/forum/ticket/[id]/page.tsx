@@ -246,8 +246,8 @@ export default function TicketDetailPage({
           <div className="flex items-center gap-2">
             <div className="flex gap-1">
               {[...Array(10)].map((_, i) => {
-                const starValue = (i + 1) * 1.0;
-                const displayValue = Math.round((ticket.rating ?? 0) * 2) / 2;
+                const starValue = i + 1;
+                const displayValue = Math.round(ticket.rating ?? 0);
                 const isFilled = starValue <= displayValue;
 
                 return (
@@ -325,8 +325,8 @@ export default function TicketDetailPage({
                 <div className="mb-4 flex items-center gap-2">
                   <div className="flex gap-1">
                     {[...Array(10)].map((_, i) => {
-                      const starValue = (i + 1) * 1.0;
-                      const displayValue = Math.round(msg.rating ?? 0 * 2) / 2;
+                      const starValue = i + 1;
+                      const displayValue = Math.round(msg.rating ?? 0);
                       const isFilled = starValue <= displayValue;
                       const isHalf =
                         starValue - 0.5 === displayValue && displayValue % 1 === 0.5;
