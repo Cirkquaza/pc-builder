@@ -26,6 +26,7 @@ export async function POST(req: NextRequest) {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+        "Cache-Control": "no-cache",
       },
       body: JSON.stringify({
         model: "mixtral-8x7b-32768",

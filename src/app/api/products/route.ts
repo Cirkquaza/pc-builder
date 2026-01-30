@@ -46,15 +46,10 @@ export async function GET(request: NextRequest) {
   const categoryId = CATEGORY_MAP[category];
 
   try {
-    // Payload za BigBang API
+    // Payload za BigBang API - simplified
     const payload: any = {
-      mode: 'widget',
-      related_widget_data: categoryId
-        ? { category_id: categoryId }
-        : { search_q: category },
-      only_available: true,
+      category_id: categoryId || '',
       limit,
-      always_to_limit: true,
       response_fields: [
         'id',
         'title',
@@ -66,16 +61,8 @@ export async function GET(request: NextRequest) {
         'category_title',
         'available_qty',
         'short_description',
-        'other_images',
       ],
-      lang: 'hr',
     };
-
-    // Dodaj price filter ako postoji
-    if (minPrice || maxPrice) {
-      const priceRange = `${minPrice || '0'}-${maxPrice || '999999'}`;
-      payload.related_widget_data.price = priceRange;
-    }
 
     const response = await fetch(
       'https://www.bigbang.hr/api/nuxtapi/catalog/products/',
@@ -86,12 +73,11 @@ export async function GET(request: NextRequest) {
           'Accept': 'application/json',
         },
         body: JSON.stringify(payload),
-        // Dodaj cache za performanse (5 min)
-        next: { revalidate: 300 },
       }
     );
 
     if (!response.ok) {
+      console.error('BigBang API response:', await response.text());
       throw new Error(`BigBang API error: ${response.status}`);
     }
 

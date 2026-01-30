@@ -49,7 +49,9 @@ export default function SetupDetailPage({
 
   const fetchSetup = async () => {
     try {
-      const response = await fetch(`/api/setups/${params.id}`);
+      const response = await fetch(`/api/setups/${params.id}?t=${Date.now()}`, {
+        cache: 'no-store',
+      });
       if (response.ok) {
         const data = await response.json();
         setSetup(data);
