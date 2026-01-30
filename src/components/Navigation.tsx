@@ -3,10 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 export default function Navigation() {
   const pathname = usePathname()
   const { data: session, status } = useSession()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const isActive = (path: string) => {
     return pathname === path
@@ -20,8 +22,8 @@ export default function Navigation() {
             <span className="text-2xl">🖥️</span>
             <span className="text-xl font-bold text-cyan-400">PC Builder</span>
           </Link>
-          
-          <div className="flex items-center gap-3">
+
+          <div className="hidden md:flex items-center gap-3">
             <div className="flex space-x-1">
               <Link 
                 href="/"
@@ -120,7 +122,133 @@ export default function Navigation() {
               )}
             </div>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            className="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-200 hover:bg-gray-800 transition-all"
+            aria-label="Otvori meni"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className="sr-only">Otvori meni</span>
+            <div className="flex flex-col gap-1">
+              <span className="block h-0.5 w-6 bg-gray-200" />
+              <span className="block h-0.5 w-6 bg-gray-200" />
+              <span className="block h-0.5 w-6 bg-gray-200" />
+            </div>
+          </button>
         </div>
+
+        {isMobileMenuOpen && (
+          <div className="md:hidden pb-4">
+            <div className="flex flex-col gap-2 pt-2">
+              <Link
+                href="/"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  isActive('/')
+                    ? 'bg-cyan-400 text-gray-900'
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                Početna
+              </Link>
+              <Link
+                href="/info"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  isActive('/info')
+                    ? 'bg-cyan-400 text-gray-900'
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                Informacije
+              </Link>
+              <Link
+                href="/shop"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  isActive('/shop')
+                    ? 'bg-cyan-400 text-gray-900'
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                Shop
+              </Link>
+              {status === 'authenticated' && (
+                <>
+                  <Link
+                    href="/forum"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      isActive('/forum')
+                        ? 'bg-cyan-400 text-gray-900'
+                        : 'text-gray-300 hover:bg-gray-800'
+                    }`}
+                  >
+                    Forum
+                  </Link>
+                  <Link
+                    href="/setups"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      isActive('/setups')
+                        ? 'bg-cyan-400 text-gray-900'
+                        : 'text-gray-300 hover:bg-gray-800'
+                    }`}
+                  >
+                    Setups
+                  </Link>
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      isActive('/profile')
+                        ? 'bg-cyan-400 text-gray-900'
+                        : 'text-gray-300 hover:bg-gray-800'
+                    }`}
+                  >
+                    Profil
+                  </Link>
+                </>
+              )}
+              <div className="h-px bg-gray-800 my-2" />
+              {status === 'authenticated' ? (
+                <>
+                  <span className="px-4 text-sm text-gray-300">
+                    {session.user?.name || session.user?.email}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false)
+                      signOut({ callbackUrl: '/' })
+                    }}
+                    className="mx-4 px-4 py-2 rounded-lg font-medium bg-gray-800 text-gray-200 hover:bg-gray-700 transition-all text-left"
+                  >
+                    Odjava
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="mx-4 px-4 py-2 rounded-lg font-medium text-gray-300 hover:bg-gray-800 transition-all"
+                  >
+                    Prijava
+                  </Link>
+                  <Link
+                    href="/auth/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="mx-4 px-4 py-2 rounded-lg font-medium bg-cyan-400 text-gray-900 hover:bg-cyan-300 transition-all"
+                  >
+                    Registracija
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )
