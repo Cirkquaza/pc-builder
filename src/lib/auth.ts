@@ -37,8 +37,11 @@ const config = (request?: NextRequest): NextAuthConfig => {
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) {
+            console.error("Auth: Missing credentials");
             return null;
           }
+
+          console.log("Auth: Attempting login for:", credentials.email);
 
           // Lazy import to avoid issues during build
           const [{ prisma }, bcrypt] = await Promise.all([
@@ -50,8 +53,10 @@ const config = (request?: NextRequest): NextAuthConfig => {
             where: { email: credentials.email as string },
           });
 
+          console.log("Auth: User lookup result:", user ? `Found user: ${user.email}` : "User not found");
+
           if (!user || !user.password) {
-            console.error("Auth: User not found or no password");
+            console.error("Auth: User not found or no password for:", credentials.email);
             return null;
           }
 
