@@ -53,7 +53,7 @@ export function ProductsLoader({ categories, children }: ProductsLoaderProps) {
       }
 
       setAllProducts(results);
-      setError(hasError ? 'Neki proizvodi nisu uÄŤitani iz API-ja' : null);
+      setError(hasError ? 'Neki proizvodi nisu učitani iz API-ja' : null);
       setLoading(false);
     }
 

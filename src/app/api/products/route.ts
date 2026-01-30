@@ -51,10 +51,27 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Probaj sa direktnim requestom - bez response_fields
-    const payload = {
-      category_id: parseInt(categoryId),
-      limit: Math.min(limit, 50),
+    // Payload sa mode: 'widget' - originalni format koji je radio
+    const payload: any = {
+      mode: 'widget',
+      related_widget_data: {
+        category_id: categoryId,
+      },
+      only_available: true,
+      limit: Math.min(parseInt(searchParams.get('limit') || '10'), 50),
+      response_fields: [
+        'id',
+        'title',
+        'basic_price_custom',
+        'discount_percent_custom',
+        'url_without_domain',
+        'main_image_upload_path',
+        'manufacturer_title',
+        'category_title',
+        'available_qty',
+        'short_description',
+      ],
+      lang: 'hr',
     };
 
     const response = await fetch(
@@ -63,20 +80,15 @@ export async function GET(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-          'Referer': 'https://www.bigbang.hr/',
+          'Accept': 'application/json',
         },
         body: JSON.stringify(payload),
       }
     );
 
-    // Log za debug
     if (!response.ok) {
       const text = await response.text();
       console.error(`BigBang API error ${response.status}:`, text.substring(0, 200));
-    }
-
-    if (!response.ok) {
       throw new Error(`API error: ${response.status}`);
     }
 
