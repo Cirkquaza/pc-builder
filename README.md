@@ -122,6 +122,7 @@ App je dostupna na http://localhost:3000
 | RESEND_API_KEY | Resend email ključ |
 | GROQ_API_KEY | Groq API ključ |
 | NEXTAUTH_URL | Base URL aplikacije |
+| RESEND_FROM | Verificirani sender (npr. no-reply@yourdomain.com) |
 
 ---
 
@@ -153,6 +154,26 @@ Ako želite **100% live** podatke bez fallbacka, potrebna je:
 1. **Partner API pristup** od Big Bang-a, ili
 2. **Proxy servis** (npr. Cloudflare Worker) koji preuzima podatke i prosljeđuje ih aplikaciji.
 
+### ✅ Cloudflare Worker proxy (preporučeno)
+
+U ovom repozitoriju postoji worker:
+
+- [workers/bigbang-proxy.js](workers/bigbang-proxy.js)
+
+**Koraci:**
+
+1. Instaliraj Wrangler CLI
+2. Deployaj worker (novi project)
+3. Postavi `PROXY_TOKEN` (optional) u worker env
+4. U `.env.local` dodaj:
+
+```
+BIGBANG_PROXY_URL=https://your-worker.your-subdomain.workers.dev
+BIGBANG_PROXY_TOKEN=your_proxy_token
+```
+
+Nakon toga, `/api/products` koristi proxy i vraća live podatke.
+
 ---
 
 ## 🛠️ Troubleshooting
@@ -162,6 +183,9 @@ Ako želite **100% live** podatke bez fallbacka, potrebna je:
 
 **2) 403/Cloudflare**
 - Fallback se aktivira automatski.
+
+**3) Resend ne šalje na sve adrese**
+- U Resend dashboardu verifikuj domain i postavi `RESEND_FROM` na taj domain.
 
 **3) Prisma error**
 - Provjeriti `DATABASE_URL` i pokrenuti `npx prisma db push`.
