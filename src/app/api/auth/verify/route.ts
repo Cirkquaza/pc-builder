@@ -6,18 +6,27 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const { prisma } = await import("@/lib/prisma");
-    const { token } = await req.json();
+    const crypto = await import("crypto");
+    const { email, code } = await req.json();
 
-    if (!token) {
+    if (!email || !code) {
       return NextResponse.json(
-        { error: "Token je obavezan" },
+        { error: "Email i kod su obavezni" },
         { status: 400 }
       );
     }
 
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(String(code))
+      .digest("hex");
+
     // Find verification token
-    const verificationToken = await prisma.verificationToken.findUnique({
-      where: { token },
+    const verificationToken = await prisma.verificationToken.findFirst({
+      where: {
+        identifier: email,
+        token: tokenHash,
+      },
     });
 
     if (!verificationToken) {
@@ -30,7 +39,7 @@ export async function POST(req: NextRequest) {
     // Check if token expired
     if (verificationToken.expires < new Date()) {
       await prisma.verificationToken.delete({
-        where: { token },
+        where: { token: verificationToken.token },
       });
       return NextResponse.json(
         { error: "Token je istekao" },
@@ -46,7 +55,7 @@ export async function POST(req: NextRequest) {
 
     // Delete used token
     await prisma.verificationToken.delete({
-      where: { token },
+      where: { token: verificationToken.token },
     });
 
     return NextResponse.json(

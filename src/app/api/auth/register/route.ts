@@ -62,15 +62,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Generate verification token
+    // Generate verification code
     const crypto = await import("crypto");
-    const token = crypto.randomBytes(32).toString("hex");
-    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const verificationCode = crypto.randomInt(100000, 1000000).toString();
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(verificationCode)
+      .digest("hex");
+    const expires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    await prisma.verificationToken.deleteMany({
+      where: { identifier: email },
+    });
 
     await prisma.verificationToken.create({
       data: {
         identifier: email,
-        token,
+        token: tokenHash,
         expires,
       },
     });
@@ -80,17 +88,21 @@ export async function POST(req: NextRequest) {
       try {
         const { Resend } = await import("resend");
         const resend = new Resend(process.env.RESEND_API_KEY);
-        const verifyUrl = `${process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://pc-builder-delta.vercel.app"}/auth/verify?token=${token}`;
+        const verifyUrl = `${process.env.AUTH_URL || process.env.NEXTAUTH_URL || "https://pc-builder-delta.vercel.app"}/auth/verify?email=${encodeURIComponent(
+          email
+        )}`;
 
         await resend.emails.send({
           from: "PC Builder <onboarding@resend.dev>",
           to: email,
-          subject: "Potvrdi svoj email",
+          subject: "Potvrdi svoj email kodom",
           html: `
             <h2>Dobrodošao u PC Builder!</h2>
-            <p>Hvala što si se registrovao. Klikni na link ispod da potvrdiš svoj email:</p>
-            <a href="${verifyUrl}">Potvrdi email</a>
-            <p>Link je valjan 24 sata.</p>
+            <p>Hvala što si se registrovao. Tvoj verifikacijski kod je:</p>
+            <p style="font-size: 24px; font-weight: bold; letter-spacing: 3px;">${verificationCode}</p>
+            <p>Unesi kod na stranici za verifikaciju:</p>
+            <a href="${verifyUrl}">Otvori verifikaciju</a>
+            <p>Kod je valjan 15 minuta.</p>
             <p>Ako nisi tražio ovaj email, ignoriši ga.</p>
           `,
         });
@@ -100,7 +112,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: "Registration successful. Check your email to verify your account.", userId: user.id },
+      { message: "Registration successful. Check your email for the verification code.", userId: user.id },
       { status: 201 }
     );
   } catch (error) {

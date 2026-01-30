@@ -60,9 +60,10 @@ const config = (request?: NextRequest): NextAuthConfig => {
             return null;
           }
 
-          // Check if email is verified - allow login anyway but log it
+          // Require verified email
           if (!user.emailVerified) {
-            console.warn("Auth: User email not verified, but allowing login:", user.email);
+            console.error("Auth: Email not verified for:", user.email);
+            return null;
           }
 
           const compare =

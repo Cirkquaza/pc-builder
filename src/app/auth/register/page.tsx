@@ -51,8 +51,8 @@ export default function RegisterPage() {
 
       // Show success message and redirect to login
       setError("");
-      alert("Registracija uspješna! Provjeri email za verifikacijski link.");
-      router.push("/auth/login");
+      alert("Registracija uspješna! Provjeri email za verifikacijski kod.");
+      router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error(err);
