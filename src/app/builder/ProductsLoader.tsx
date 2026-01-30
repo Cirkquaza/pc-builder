@@ -24,96 +24,27 @@ export function ProductsLoader({ categories, children }: ProductsLoaderProps) {
       const results: Record<string, Component[]> = {};
       let hasError = false;
 
-      const CATEGORY_MAP: Record<string, string> = {
-        cpu: '593',
-        gpu: '594',
-        ram: '595',
-        motherboard: '592',
-        storage: '597',
-        ssd: '597',
-        hdd: '598',
-        case: '599',
-        psu: '600',
-        cooling: '601',
-        monitor: '5000029054',
-        laptop: '560',
-        peripherals: '700',
-      };
-
       for (const category of categories) {
         try {
-          const categoryId = CATEGORY_MAP[category];
-          
-          if (!categoryId) {
-            results[category] = getFallbackProducts(category);
-            continue;
-          }
-
-          const payload = {
-            mode: 'widget',
-            related_widget_data: {
-              category_id: categoryId,
-            },
-            only_available: true,
-            limit: 10,
-            response_fields: [
-              'id',
-              'title',
-              'basic_price_custom',
-              'discount_percent_custom',
-              'url_without_domain',
-              'main_image_upload_path',
-              'manufacturer_title',
-              'category_title',
-              'available_qty',
-              'short_description',
-            ],
-            lang: 'hr',
-          };
-
-          const response = await fetch('https://www.bigbang.hr/api/nuxtapi/catalog/products/', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-            },
-            body: JSON.stringify(payload),
+          const response = await fetch(`/api/products?category=${category}&limit=10`, {
+            cache: 'no-store',
           });
 
           if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
+            throw new Error(`Failed to load ${category}`);
           }
 
           const data = await response.json();
 
-          if (data.data?.items && data.data.items.length > 0) {
-            results[category] = data.data.items.map((item: any) => ({
-              id: item.id || Math.random().toString(),
-              name: item.title || 'Unknown',
-              price: parseFloat(item.basic_price_custom) || 0,
-              finalPrice:
-                parseFloat(item.basic_price_custom) *
-                (1 - (parseFloat(item.discount_percent_custom) || 0) / 100),
-              discount: parseFloat(item.discount_percent_custom) || 0,
-              brand: item.manufacturer_title || 'Unknown',
-              specs: extractSpecs(item.title),
-              url: item.url_without_domain
-                ? `https://www.bigbang.hr${item.url_without_domain}`
-                : 'https://www.bigbang.hr',
-              link: item.url_without_domain
-                ? `https://www.bigbang.hr${item.url_without_domain}`
-                : 'https://www.bigbang.hr',
-              image: item.main_image_upload_path
-                ? `https://www.bigbang.hr${item.main_image_upload_path}`
-                : '',
-              category: item.category_title || category,
-              inStock: (item.available_qty || 0) > 0,
-              stock: item.available_qty || 0,
-              description: item.short_description || '',
-              reason: generateReason(item, category),
+          if (data.success && data.products) {
+            results[category] = data.products.map((p: any) => ({
+              ...p,
+              specs: p.specs || extractSpecs(p.name),
+              link: p.url,
+              reason: p.reason || generateReason(p, category),
             }));
           } else {
-            throw new Error('No items returned');
+            results[category] = getFallbackProducts(category);
           }
         } catch (err) {
           console.error(`Error loading ${category}:`, err);
