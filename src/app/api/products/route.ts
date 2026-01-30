@@ -12,7 +12,9 @@ const CATEGORY_MAP: Record<string, string> = {
   case: '599', // Kućišta
   psu: '600', // Napajanja
   cooling: '601', // Hlađenje
-  monitor: '5000029054', // Monitori (ako treba)
+  monitor: '5000029054', // Monitori
+  laptop: '560', // Laptopi
+  peripherals: '700', // Periferije (miš, tastatura, itd)
 };
 
 interface BigBangProduct {
@@ -44,10 +46,12 @@ export async function GET(request: NextRequest) {
   const categoryId = CATEGORY_MAP[category];
 
   if (!categoryId) {
-    return NextResponse.json(
-      { error: 'Unknown category', category },
-      { status: 400 }
-    );
+    // Vratiti prazan odgovor umjesto 400 greške - fallback će se koristiti
+    return NextResponse.json({
+      success: false,
+      category,
+      products: [],
+    });
   }
 
   try {
