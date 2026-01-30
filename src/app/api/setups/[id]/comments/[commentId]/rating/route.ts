@@ -28,26 +28,20 @@ export async function POST(
 
     const { prisma } = await import("@/lib/prisma");
 
-    const existing = await prisma.setupCommentRating.findUnique({
+    // Allow update if user already voted
+    await prisma.setupCommentRating.upsert({
       where: {
         commentId_userId: {
           commentId: params.commentId,
           userId: session.user.id,
         },
       },
-    });
-
-    if (existing) {
-      return NextResponse.json(
-        { error: "Rejting se može dati samo jednom" },
-        { status: 409 }
-      );
-    }
-
-    await prisma.setupCommentRating.create({
-      data: {
+      create: {
         commentId: params.commentId,
         userId: session.user.id,
+        rating,
+      },
+      update: {
         rating,
       },
     });

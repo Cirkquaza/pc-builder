@@ -58,8 +58,15 @@ export default function ShopPage() {
             return (
               <div className="space-y-6">
                 {error && (
-                  <div className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 px-4 py-3 text-sm text-yellow-200">
-                    {error} – prikazujem fallback podatke.
+                  <div className="rounded-lg border border-orange-500/60 bg-orange-500/15 px-4 py-4 text-sm text-orange-200 space-y-2">
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">⚠️</span>
+                      <div>
+                        <p className="font-semibold">Podaci nisu live</p>
+                        <p className="text-orange-100 text-xs mt-1">{error} – prikazujem fallback podatke sa primjerima cijena.</p>
+                        <p className="text-orange-100 text-xs mt-1">Za live cijene i dostupnost, <strong>kupi direktno na Big Bang-u</strong> preko "Kupi na Big Bang" dugmeta.</p>
+                      </div>
+                    </div>
                   </div>
                 )}
 
