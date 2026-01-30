@@ -78,13 +78,17 @@ export async function GET(request: NextRequest) {
       lang: 'hr',
     };
 
+    const proxyUrl = process.env.BIGBANG_PROXY_URL;
+    const proxyToken = process.env.BIGBANG_PROXY_TOKEN;
+
     const response = await fetch(
-      'https://www.bigbang.hr/api/nuxtapi/catalog/products/',
+      proxyUrl || 'https://www.bigbang.hr/api/nuxtapi/catalog/products/',
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          ...(proxyToken ? { Authorization: `Bearer ${proxyToken}` } : {}),
         },
         body: JSON.stringify(payload),
       }

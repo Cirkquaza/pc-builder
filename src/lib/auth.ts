@@ -60,11 +60,7 @@ const config = (request?: NextRequest): NextAuthConfig => {
             return null;
           }
 
-          // Require verified email
-          if (!user.emailVerified) {
-            console.error("Auth: Email not verified for:", user.email);
-            return null;
-          }
+          // Email verification is now optional - users can verify later from settings
 
           const compare =
             bcrypt.compare ?? (bcrypt.default && bcrypt.default.compare);

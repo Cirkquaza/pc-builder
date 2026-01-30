@@ -24,12 +24,49 @@ export default function ProfilePage() {
   const router = useRouter();
   const [userSetups, setUserSetups] = useState<UserSetup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [verifyingEmail, setVerifyingEmail] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   useEffect(() => {
     if (status === "authenticated") {
       fetchUserSetups();
+      // Check if email is verified
+      checkEmailVerification();
     }
   }, [status]);
+
+  const checkEmailVerification = async () => {
+    try {
+      const response = await fetch("/api/auth/profile");
+      if (response.ok) {
+        const data = await response.json();
+        setEmailVerified(data.emailVerified);
+      }
+    } catch (error) {
+      console.error("Error checking email verification:", error);
+    }
+  };
+
+  const requestEmailVerification = async () => {
+    setVerifyingEmail(true);
+    try {
+      const response = await fetch("/api/auth/request-email-verification", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        alert("Verifikacijski kod je poslan na tvoj email!");
+      } else {
+        const data = await response.json();
+        alert(`Greška: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Error requesting email verification:", error);
+      alert("Greška pri slanju verifikacijskog koda");
+    } finally {
+      setVerifyingEmail(false);
+    }
+  };
 
   const fetchUserSetups = async () => {
     try {
@@ -65,6 +102,30 @@ export default function ProfilePage() {
         <h1 className="text-4xl font-bold mb-4">Moj profil</h1>
         <p className="text-gray-200">Email: {session?.user?.email}</p>
         <p className="text-gray-300">Ime: {session?.user?.name || "Nije postavljeno"}</p>
+        
+        {/* Email Verification Section */}
+        <div className="mt-6 pt-6 border-t border-slate-600">
+          {emailVerified ? (
+            <div className="flex items-center gap-2 text-green-400">
+              <span>✓</span>
+              <span>Email je verificiran</span>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-yellow-400 flex items-center gap-2">
+                <span>⚠</span>
+                <span>Email nije verificiran</span>
+              </p>
+              <button
+                onClick={requestEmailVerification}
+                disabled={verifyingEmail}
+                className="bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg transition"
+              >
+                {verifyingEmail ? "Slanje..." : "Verificiraj email"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* My Setups Section */}

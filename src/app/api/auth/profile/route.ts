@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
         email: true,
         name: true,
         setupImage: true,
+        emailVerified: true,
       },
     });
 
