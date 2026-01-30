@@ -1,4 +1,182 @@
-# 🖥️ PC Builder - Konfiguracija Računara
+# 🖥️ PC Builder — Profesionalna dokumentacija
+
+Web aplikacija za sastavljanje računara uz provjeru kompatibilnosti, pametne preporuke i integraciju sa Big Bang katalogom za proizvode i cijene. Fokus je na brzom UX-u, jasnoj strukturi i stabilnim fallback podacima kada vanjski servis nije dostupan.
+
+---
+
+## ✨ Ključne mogućnosti
+
+- 🤖 **AI konfiguracija** (automatski prijedlozi komponenti)
+- 🔧 **Ručni odabir** komponenti uz kompatibilnost
+- 💰 **Budžet tracking** u realnom vremenu
+- 🔄 **Zamjena dijelova** bez resetiranja ostalih komponenti
+- 📊 **Validacija kompatibilnosti**
+- 🔗 **Dijeljenje konfiguracija** putem linka
+- 🛒 **Shop** sa pretragom i filtriranjem
+- 🧠 **Forum** s ticketima, komentarima i ratingom
+
+---
+
+## 🧱 Tech Stack
+
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **NextAuth v5** (auth)
+- **Prisma + PostgreSQL (Neon)**
+- **Resend** (email verifikacija)
+- **Groq API** (AI chat)
+- **Big Bang API** (katalog proizvoda)
+
+---
+
+## 🧭 Arhitektura sistema (visoki nivo)
+
+```mermaid
+flowchart TB
+  U[User Browser] --> FE[Next.js App Router UI]
+  FE -->|fetch| API[Next.js API Routes]
+  API --> DB[(PostgreSQL via Prisma)]
+  API --> AUTH[NextAuth Auth]
+  API --> GROQ[Groq AI]
+  API --> RESEND[Resend Email]
+  API --> BB[Big Bang API]
+
+  BB -. fallback .-> FB[Local Fallback Products]
+  FE <-- API
+```
+
+---
+
+## 🔁 Tok proizvoda (Shop/Builder)
+
+```mermaid
+sequenceDiagram
+  participant C as Client
+  participant A as /api/products
+  participant B as Big Bang API
+  participant F as Fallback Data
+
+  C->>A: GET /api/products?category=cpu&limit=10
+  A->>B: POST /api/nuxtapi/catalog/products/
+  alt Big Bang OK
+    B-->>A: items[]
+    A-->>C: products[] (mapped)
+  else Error/403/Cloudflare
+    A-->>C: success:false
+    C->>F: use fallback list
+  end
+```
+
+---
+
+## 🗃️ Glavni moduli
+
+- **Builder**: odabir dijelova, kompatibilnost, budžet
+- **Shop**: pregled i filter proizvoda po kategoriji
+- **Forum**: ticketi, komentari, rating, clap
+- **Setups**: upload i prikaz konfiguracija
+- **Auth**: registracija, prijava, email verifikacija
+
+---
+
+## 🗄️ Modeli baze (sažetak)
+
+- **User** — korisnici
+- **Ticket** — forum teme (rating/claps)
+- **Message** — komentari na ticketima
+- **Setup** — korisničke konfiguracije
+- **SetupComment** — komentari na setup
+- **MessageReaction / SetupCommentReaction** — like/dislike (1 po korisniku)
+- **MessageRating / SetupCommentRating** — rating (1 po korisniku)
+- **TicketRating / TicketClap** — rating/clap (1 po korisniku)
+
+---
+
+## ⚙️ Instalacija (lokalno)
+
+### Preduvjeti
+- Node.js 18+
+- npm
+- PostgreSQL (ili Neon)
+
+### Koraci
+
+```bash
+git clone https://github.com/Cirkquaza/pc-builder.git
+cd pc-builder
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+App je dostupna na http://localhost:3000
+
+---
+
+## 🔐 Environment varijable
+
+| Varijabla | Opis |
+|---|---|
+| DATABASE_URL | Prisma/PostgreSQL konekcija |
+| NEXTAUTH_SECRET | NextAuth secret |
+| RESEND_API_KEY | Resend email ključ |
+| GROQ_API_KEY | Groq API ključ |
+| NEXTAUTH_URL | Base URL aplikacije |
+
+---
+
+## 📦 Skripte
+
+```bash
+npm run dev      # lokalni dev
+npm run build    # produkcijski build
+npm run start    # produkcijski server
+npm run lint     # lint
+```
+
+---
+
+## 🚀 Deployment
+
+- Preporuka: **Vercel**
+- Automatski deploy na `git push` u main
+- `.env` fajl **nikad** ne smije biti u git-u
+
+---
+
+## 🧩 Big Bang integracija (važno)
+
+Big Bang API je zaštićen Cloudflare-om. Direktni pozivi iz browsera su blokirani (CORS). Zato se koristi **server-side** API ruta koja pokušava fetch i vraća fallback kada Big Bang blokira.
+
+Ako želite **100% live** podatke bez fallbacka, potrebna je:
+
+1. **Partner API pristup** od Big Bang-a, ili
+2. **Proxy servis** (npr. Cloudflare Worker) koji preuzima podatke i prosljeđuje ih aplikaciji.
+
+---
+
+## 🛠️ Troubleshooting
+
+**1) CORS greške u browseru**
+- Ne pozivati Big Bang API direktno iz browsera.
+
+**2) 403/Cloudflare**
+- Fallback se aktivira automatski.
+
+**3) Prisma error**
+- Provjeriti `DATABASE_URL` i pokrenuti `npx prisma db push`.
+
+---
+
+## ✅ Status projekta
+
+- Stabilan build
+- Fallback sistem aktivan
+- Forum, auth i setupi funkcionalni
+
+---
+
+Ako želiš **pravi live katalog bez fallbacka**, mogu odmah napraviti Cloudflare Worker proxy i povezati ga u app.# 🖥️ PC Builder - Konfiguracija Računara
 
 Aplikacija za jednostavno i brzo sastavljanje računara sa provjerom kompatibilnosti komponenti, automatskim preporukama i mogućnosti dijeljenja konfiguracija. Integrirana sa **Big Bang** za live cijene i dostupnost komponenti.
 
