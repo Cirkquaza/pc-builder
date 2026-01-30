@@ -11,6 +11,8 @@ interface TicketDetail {
   description: string;
   author: string;
   createdAt: string;
+  rating: number;
+  claps: number;
   messages: Message[];
 }
 
@@ -91,6 +93,11 @@ export default function TicketDetailPage({
         }
       );
 
+      if (response.status === 409) {
+        alert("Lajk možeš dati samo jednom");
+        return;
+      }
+
       if (response.ok) {
         fetchTicket();
       }
@@ -109,6 +116,11 @@ export default function TicketDetailPage({
           body: JSON.stringify({ type: "dislike" }),
         }
       );
+
+      if (response.status === 409) {
+        alert("Dislajk možeš dati samo jednom");
+        return;
+      }
 
       if (response.ok) {
         fetchTicket();
@@ -129,11 +141,56 @@ export default function TicketDetailPage({
         }
       );
 
+      if (response.status === 409) {
+        alert("Rejting možeš dati samo jednom");
+        return;
+      }
+
       if (response.ok) {
         fetchTicket();
       }
     } catch (error) {
       console.error("Error rating:", error);
+    }
+  };
+
+  const handleTicketRating = async (rating: number) => {
+    try {
+      const response = await fetch(`/api/forum/tickets/${params.id}/rating`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rating }),
+      });
+
+      if (response.status === 409) {
+        alert("Rejting možeš dati samo jednom");
+        return;
+      }
+
+      if (response.ok) {
+        fetchTicket();
+      }
+    } catch (error) {
+      console.error("Error rating ticket:", error);
+    }
+  };
+
+  const handleClap = async () => {
+    try {
+      const response = await fetch(`/api/forum/tickets/${params.id}/clap`, {
+        method: "POST",
+      });
+
+      if (response.status === 409) {
+        alert("Tapkanje možeš dati samo jednom");
+        return;
+      }
+
+      if (response.ok) {
+        fetchTicket();
+      }
+    } catch (error) {
+      console.error("Error clapping:", error);
     }
   };
 
@@ -184,6 +241,44 @@ export default function TicketDetailPage({
         <div className="flex items-center gap-4 text-sm text-gray-300">
           <span>Autor: {ticket.author}</span>
           <span>{new Date(ticket.createdAt).toLocaleDateString("sr-RS")}</span>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              {[...Array(10)].map((_, i) => {
+                const starValue = (i + 1) * 1.0;
+                const displayValue = Math.round((ticket.rating ?? 0) * 2) / 2;
+                const isFilled = starValue <= displayValue;
+
+                return (
+                  <button
+                    key={i}
+                    onClick={() => handleTicketRating(starValue)}
+                    className="transition-transform hover:scale-125"
+                  >
+                    <Star
+                      size={18}
+                      className={`${
+                        isFilled
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-500"
+                      }`}
+                    />
+                  </button>
+                );
+              })}
+            </div>
+            <span className="text-sm text-gray-200">
+              {(ticket.rating ?? 0).toFixed(1)}/10.0
+            </span>
+          </div>
+          <button
+            onClick={handleClap}
+            className="flex items-center gap-2 text-gray-200 hover:text-amber-300 transition"
+          >
+            <span className="text-xl">👏</span>
+            <span className="text-sm">{ticket.claps ?? 0}</span>
+          </button>
         </div>
       </div>
 

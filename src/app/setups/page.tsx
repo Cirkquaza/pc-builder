@@ -283,7 +283,7 @@ export default function SetupsPage() {
               />
 
               {/* Delete Button */}
-              {session?.user && (
+              {session?.user?.id === setup.userId && (
                 <button
                   onClick={(e) => handleDeleteSetup(e, setup.id)}
                   className="absolute top-2 right-2 text-red-400 hover:text-red-300 bg-black/70 p-2 rounded opacity-0 group-hover:opacity-100 transition"

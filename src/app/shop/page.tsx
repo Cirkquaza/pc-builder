@@ -5,7 +5,20 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ProductsLoader } from '../builder/ProductsLoader'
 import { Component } from '../builder/useProducts'
 
-const CATEGORIES = ['cpu', 'gpu', 'ram', 'motherboard', 'storage', 'psu', 'case']
+const CATEGORIES = [
+  'cpu',
+  'gpu',
+  'ram',
+  'motherboard',
+  'storage',
+  'psu',
+  'case',
+  'monitor',
+  'cooling',
+  'hdd',
+  'laptop',
+  'peripherals',
+]
 
 export default function ShopPage() {
   const [query, setQuery] = useState('')

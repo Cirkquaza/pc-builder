@@ -10,7 +10,7 @@ export async function POST(
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json({ error: "Potrebna je prijava" }, { status: 401 });
     }
 
@@ -25,9 +25,38 @@ export async function POST(
 
     const { prisma } = await import("@/lib/prisma");
 
+    const existing = await prisma.messageRating.findUnique({
+      where: {
+        messageId_userId: {
+          messageId: params.messageId,
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "Rejting se može dati samo jednom" },
+        { status: 409 }
+      );
+    }
+
+    await prisma.messageRating.create({
+      data: {
+        messageId: params.messageId,
+        userId: session.user.id,
+        rating,
+      },
+    });
+
+    const aggregate = await prisma.messageRating.aggregate({
+      where: { messageId: params.messageId },
+      _avg: { rating: true },
+    });
+
     const updatedMessage = await prisma.message.update({
       where: { id: params.messageId },
-      data: { rating },
+      data: { rating: aggregate._avg.rating ?? 0 },
     });
 
     return NextResponse.json({ rating: updatedMessage.rating });

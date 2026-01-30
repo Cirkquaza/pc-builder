@@ -43,6 +43,16 @@ export default function Navigation() {
               >
                 Informacije
               </Link>
+              <Link 
+                href="/shop"
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  isActive('/shop') 
+                    ? 'bg-cyan-400 text-gray-900' 
+                    : 'text-gray-300 hover:bg-gray-800'
+                }`}
+              >
+                Shop
+              </Link>
               {status === 'authenticated' && (
                 <>
                   <Link 

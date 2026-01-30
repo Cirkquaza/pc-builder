@@ -6,6 +6,7 @@ const CATEGORY_MAP: Record<string, string> = {
   gpu: '594', // Grafičke kartice
   ram: '595', // RAM memorija
   motherboard: '592', // Matične ploče
+  storage: '597', // SSD diskovi
   ssd: '597', // SSD diskovi
   hdd: '598', // HDD diskovi
   case: '599', // Kućišta
@@ -43,21 +44,14 @@ export async function GET(request: NextRequest) {
   const maxPrice = searchParams.get('maxPrice');
 
   const categoryId = CATEGORY_MAP[category];
-  
-  if (!categoryId) {
-    return NextResponse.json(
-      { error: 'Invalid category' },
-      { status: 400 }
-    );
-  }
 
   try {
     // Payload za BigBang API
     const payload: any = {
       mode: 'widget',
-      related_widget_data: {
-        category_id: categoryId,
-      },
+      related_widget_data: categoryId
+        ? { category_id: categoryId }
+        : { search_q: category },
       only_available: true,
       limit,
       always_to_limit: true,

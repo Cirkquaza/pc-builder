@@ -10,7 +10,7 @@ export async function POST(
 ) {
   try {
     const session = await auth();
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Potrebna je prijava" },
         { status: 401 }
@@ -18,6 +18,12 @@ export async function POST(
     }
 
     const { type } = await req.json();
+    if (type !== "like" && type !== "dislike") {
+      return NextResponse.json(
+        { error: "Neispravan tip" },
+        { status: 400 }
+      );
+    }
 
     const { prisma } = await import("@/lib/prisma");
 
@@ -32,16 +38,42 @@ export async function POST(
       );
     }
 
-    let updateData = {};
-    if (type === "like") {
-      updateData = { likes: comment.likes + 1 };
-    } else if (type === "dislike") {
-      updateData = { dislikes: comment.dislikes + 1 };
+    const existing = await prisma.setupCommentReaction.findUnique({
+      where: {
+        commentId_userId: {
+          commentId: params.commentId,
+          userId: session.user.id,
+        },
+      },
+    });
+
+    if (existing) {
+      return NextResponse.json(
+        { error: "Već ste reagovali na ovaj komentar" },
+        { status: 409 }
+      );
     }
+
+    await prisma.setupCommentReaction.create({
+      data: {
+        commentId: params.commentId,
+        userId: session.user.id,
+        type,
+      },
+    });
+
+    const [likesCount, dislikesCount] = await Promise.all([
+      prisma.setupCommentReaction.count({
+        where: { commentId: params.commentId, type: "like" },
+      }),
+      prisma.setupCommentReaction.count({
+        where: { commentId: params.commentId, type: "dislike" },
+      }),
+    ]);
 
     const updatedComment = await prisma.setupComment.update({
       where: { id: params.commentId },
-      data: updateData,
+      data: { likes: likesCount, dislikes: dislikesCount },
     });
 
     return NextResponse.json({

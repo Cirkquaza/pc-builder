@@ -45,6 +45,8 @@ export async function GET(
       description: ticket.description,
       author: ticket.user?.name || "Anoniman",
       createdAt: ticket.createdAt,
+      rating: ticket.rating,
+      claps: ticket.claps,
       messages: ticket.messages.map((msg) => ({
         id: msg.id,
         userId: msg.userId,

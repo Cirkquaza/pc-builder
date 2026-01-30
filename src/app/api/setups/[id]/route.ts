@@ -33,6 +33,7 @@ export async function GET(
 
     const formattedSetup = {
       id: setup.id,
+      userId: setup.userId,
       title: setup.title,
       description: setup.description,
       image: setup.image,

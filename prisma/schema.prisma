@@ -29,6 +29,12 @@ model User {
   messages              Message[]
   setups                Setup[]
   setupComments         SetupComment[]
+  messageReactions       MessageReaction[]
+  setupCommentReactions  SetupCommentReaction[]
+  messageRatings         MessageRating[]
+  setupCommentRatings    SetupCommentRating[]
+  ticketRatings          TicketRating[]
+  ticketClaps            TicketClap[]
 
   @@map("users")
 }
@@ -93,8 +99,13 @@ model Ticket {
   userId    String
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages  Message[]
+  rating    Float     @default(0)
+  claps     Int       @default(0)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  ratings   TicketRating[]
+  clapsList TicketClap[]
 
   @@map("tickets")
 }
@@ -113,6 +124,9 @@ model Message {
   rating    Float?    @default(0) // 0.0 to 10.0 rating
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  reactions MessageReaction[]
+  ratings   MessageRating[]
 
   @@map("messages")
 }
@@ -149,5 +163,91 @@ model SetupComment {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
+  reactions SetupCommentReaction[]
+  ratings   SetupCommentRating[]
+
   @@map("setup_comments")
+}
+
+model MessageReaction {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  type      String
+  createdAt DateTime @default(now())
+
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@map("message_reactions")
+}
+
+model SetupCommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  type      String
+  createdAt DateTime @default(now())
+
+  comment   SetupComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@map("setup_comment_reactions")
+}
+
+model MessageRating {
+  id        String   @id @default(cuid())
+  messageId String
+  userId    String
+  rating    Float
+  createdAt DateTime @default(now())
+
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@map("message_ratings")
+}
+
+model SetupCommentRating {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  rating    Float
+  createdAt DateTime @default(now())
+
+  comment   SetupComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+  @@map("setup_comment_ratings")
+}
+
+model TicketRating {
+  id        String   @id @default(cuid())
+  ticketId  String
+  userId    String
+  rating    Float
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, userId])
+  @@map("ticket_ratings")
+}
+
+model TicketClap {
+  id        String   @id @default(cuid())
+  ticketId  String
+  userId    String
+  createdAt DateTime @default(now())
+
+  ticket    Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([ticketId, userId])
+  @@map("ticket_claps")
 }

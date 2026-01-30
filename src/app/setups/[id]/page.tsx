@@ -18,6 +18,7 @@ interface SetupComment {
 
 interface SetupDetail {
   id: string;
+  userId: string;
   title: string;
   description?: string;
   image: string;
@@ -98,11 +99,15 @@ export default function SetupDetailPage({
     }
 
     try {
-      await fetch(`/api/setups/${params.id}/comments/${commentId}/like`, {
+      const response = await fetch(`/api/setups/${params.id}/comments/${commentId}/like`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "like" }),
       });
+      if (response.status === 409) {
+        alert("Lajk možeš dati samo jednom");
+        return;
+      }
       fetchSetup();
     } catch (error) {
       console.error("Error liking:", error);
@@ -116,11 +121,15 @@ export default function SetupDetailPage({
     }
 
     try {
-      await fetch(`/api/setups/${params.id}/comments/${commentId}/like`, {
+      const response = await fetch(`/api/setups/${params.id}/comments/${commentId}/like`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "dislike" }),
       });
+      if (response.status === 409) {
+        alert("Dislajk možeš dati samo jednom");
+        return;
+      }
       fetchSetup();
     } catch (error) {
       console.error("Error disliking:", error);
@@ -134,14 +143,39 @@ export default function SetupDetailPage({
     }
 
     try {
-      await fetch(`/api/setups/${params.id}/comments/${commentId}/rating`, {
+      const response = await fetch(`/api/setups/${params.id}/comments/${commentId}/rating`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rating }),
       });
+      if (response.status === 409) {
+        alert("Rejting možeš dati samo jednom");
+        return;
+      }
       fetchSetup();
     } catch (error) {
       console.error("Error rating:", error);
+    }
+  };
+
+  const handleDeleteSetup = async () => {
+    if (!confirm("Da li si siguran da želiš obrisati ovaj setup?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/setups/${params.id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        router.push("/setups");
+      } else {
+        alert("Greška pri brisanju setupa");
+      }
+    } catch (error) {
+      console.error("Error deleting setup:", error);
+      alert("Greška pri brisanju setupa");
     }
   };
 
@@ -197,6 +231,14 @@ export default function SetupDetailPage({
           >
             ← Nazad
           </button>
+          {session?.user?.id === setup.userId && (
+            <button
+              onClick={handleDeleteSetup}
+              className="ml-4 text-red-300 hover:text-red-200 text-sm"
+            >
+              Obriši setup
+            </button>
+          )}
           <h1 className="text-4xl font-bold mb-2">{setup.title}</h1>
           <p className="text-gray-300 mb-4">{setup.description}</p>
           <div className="flex items-center gap-4 text-sm text-gray-300">

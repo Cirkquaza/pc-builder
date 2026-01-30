@@ -158,6 +158,26 @@ function getFallbackProducts(category: string): Component[] {
       { id: '1', name: 'NZXT H510', brand: 'NZXT', price: 79, finalPrice: 79, specs: 'ATX, MinimalistiÄŤki dizajn', link: bigBangSearch('NZXT H510'), url: bigBangSearch('NZXT H510'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=NZXT+H510', category: 'Case', inStock: true, stock: 6, discount: 0, description: '', reason: 'ÄŚist dizajn' },
       { id: '2', name: 'Corsair 4000D Airflow', brand: 'Corsair', price: 106, finalPrice: 106, specs: 'ATX, OdliÄŤna ventilacija', link: bigBangSearch('Corsair 4000D Airflow'), url: bigBangSearch('Corsair 4000D Airflow'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=Corsair+4000D', category: 'Case', inStock: true, stock: 10, discount: 0, description: '', reason: 'Izvrsna cirkulacija' },
     ],
+    monitor: [
+      { id: '1', name: 'LG 27" UltraGear', brand: 'LG', price: 229, finalPrice: 229, specs: '27", 144Hz, IPS', link: bigBangSearch('LG UltraGear 27'), url: bigBangSearch('LG UltraGear 27'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=LG+27%22', category: 'Monitor', inStock: true, stock: 6, discount: 0, description: '', reason: 'Gaming monitor' },
+      { id: '2', name: 'Samsung Odyssey G5', brand: 'Samsung', price: 249, finalPrice: 249, specs: '27", 144Hz, VA', link: bigBangSearch('Samsung Odyssey G5'), url: bigBangSearch('Samsung Odyssey G5'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=Odyssey+G5', category: 'Monitor', inStock: true, stock: 5, discount: 0, description: '', reason: 'Zakrivljeni monitor' },
+    ],
+    cooling: [
+      { id: '1', name: 'Cooler Master Hyper 212', brand: 'Cooler Master', price: 35, finalPrice: 35, specs: 'Air cooler', link: bigBangSearch('Cooler Master Hyper 212'), url: bigBangSearch('Cooler Master Hyper 212'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=Hyper+212', category: 'Cooling', inStock: true, stock: 12, discount: 0, description: '', reason: 'Pouzdano hlađenje' },
+      { id: '2', name: 'NZXT Kraken 240', brand: 'NZXT', price: 139, finalPrice: 139, specs: 'AIO 240mm', link: bigBangSearch('NZXT Kraken 240'), url: bigBangSearch('NZXT Kraken 240'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=Kraken+240', category: 'Cooling', inStock: true, stock: 6, discount: 0, description: '', reason: 'AIO hlađenje' },
+    ],
+    hdd: [
+      { id: '1', name: 'Seagate Barracuda 2TB', brand: 'Seagate', price: 59, finalPrice: 59, specs: '3.5", 7200RPM', link: bigBangSearch('Seagate Barracuda 2TB'), url: bigBangSearch('Seagate Barracuda 2TB'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=Seagate+2TB', category: 'HDD', inStock: true, stock: 14, discount: 0, description: '', reason: 'Veliki kapacitet' },
+      { id: '2', name: 'WD Blue 1TB', brand: 'WD', price: 45, finalPrice: 45, specs: '3.5", 7200RPM', link: bigBangSearch('WD Blue 1TB'), url: bigBangSearch('WD Blue 1TB'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=WD+Blue+1TB', category: 'HDD', inStock: true, stock: 10, discount: 0, description: '', reason: 'Pouzdan disk' },
+    ],
+    laptop: [
+      { id: '1', name: 'Lenovo IdeaPad 5', brand: 'Lenovo', price: 629, finalPrice: 629, specs: 'Ryzen 5, 16GB RAM, 512GB SSD', link: bigBangSearch('Lenovo IdeaPad 5'), url: bigBangSearch('Lenovo IdeaPad 5'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=IdeaPad+5', category: 'Laptop', inStock: true, stock: 4, discount: 0, description: '', reason: 'Odličan za posao' },
+      { id: '2', name: 'ASUS TUF Gaming', brand: 'ASUS', price: 899, finalPrice: 899, specs: 'RTX 4060, 16GB RAM', link: bigBangSearch('ASUS TUF Gaming'), url: bigBangSearch('ASUS TUF Gaming'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=ASUS+TUF', category: 'Laptop', inStock: true, stock: 3, discount: 0, description: '', reason: 'Gaming laptop' },
+    ],
+    peripherals: [
+      { id: '1', name: 'Logitech G Pro X', brand: 'Logitech', price: 99, finalPrice: 99, specs: 'Gaming headset', link: bigBangSearch('Logitech G Pro X'), url: bigBangSearch('Logitech G Pro X'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=G+Pro+X', category: 'Peripherals', inStock: true, stock: 9, discount: 0, description: '', reason: 'Kvalitetan zvuk' },
+      { id: '2', name: 'Razer DeathAdder V2', brand: 'Razer', price: 49, finalPrice: 49, specs: 'Gaming mouse', link: bigBangSearch('Razer DeathAdder V2'), url: bigBangSearch('Razer DeathAdder V2'), image: 'https://dummyimage.com/160x160/0f172a/00e3ff&text=DeathAdder', category: 'Peripherals', inStock: true, stock: 20, discount: 0, description: '', reason: 'Ergonomski miš' },
+    ],
   };
 
   return fallbacks[category] || [];
